@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+def TEST_ADMOB_APP_ID = 'ca-app-pub-3940256099942544~3347511713'
+
 android {
     namespace "in.masalayatra.game"
     compileSdk rootProject.ext.compileSdkVersion
@@ -10,6 +12,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // AdMob app id comes from android/gradle.properties (ADMOB_APP_ID); falls back to Google's TEST id.
+        manifestPlaceholders = [admobAppId: (project.findProperty('ADMOB_APP_ID') ?: TEST_ADMOB_APP_ID)]
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
@@ -51,4 +55,17 @@ try {
     }
 } catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}
+
+// Guard: never ship a release build that still uses Google's test AdMob ids (it would earn nothing).
+// Override for internal QA with: ./gradlew bundleRelease -PallowTestAds=true
+gradle.taskGraph.whenReady { graph ->
+    def releasing = graph.allTasks.any { it.name.toLowerCase().contains('release') && (it.name.startsWith('assemble') || it.name.startsWith('bundle')) }
+    if (!releasing || project.hasProperty('allowTestAds')) return
+    def appId = project.findProperty('ADMOB_APP_ID') ?: ''
+    def cfg = file('../../www/js/ad-config.js').text
+    def unitSet = (cfg =~ /rewardedAndroid:\s*'ca-app-pub-(?!3940256099942544)[0-9]+\/[0-9]+'/).find()
+    if (!appId || appId.contains('3940256099942544') || !unitSet) {
+        throw new GradleException('Release build blocked: real AdMob ids are not configured. Run `npm run ads:setup` (see docs/MONETIZATION.md), or pass -PallowTestAds=true for a QA build.')
+    }
 }

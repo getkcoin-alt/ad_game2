@@ -59,9 +59,15 @@ The Gradle wrapper is set to 8.14 and the Android Gradle Plugin to 8.7.3, so the
 
 ### Before releasing to Play
 
-1. **AdMob:** create an app and a *Rewarded* ad unit in AdMob, then:
-   * replace the test **app id** in `android/app/src/main/AndroidManifest.xml` (`com.google.android.gms.ads.APPLICATION_ID`)
-   * replace the test **unit id** `ADMOB_REWARDED_ID` in `www/js/ads.js`
+1. **Ads and earning money:** follow **[docs/MONETIZATION.md](docs/MONETIZATION.md)**. In short:
+   1. Create AdMob (and optionally AdSense) accounts.
+   2. Write your IDs into the game with one command:
+      ```bash
+      npm run ads:setup -- --admob-app … --rewarded … --adsense …
+      ```
+   3. Publish `app-ads.txt`.
+
+   Release builds refuse to compile while test ad IDs are still configured.
 2. **Analytics (optional):** `npm i @capacitor-firebase/analytics firebase`, add `google-services.json` to `android/app/`, then `npx cap sync`. `analytics.js` detects the plugin automatically.
 3. **Signing:** create an upload keystore and run `./gradlew bundleRelease` to get an AAB.
 4. **Store listing:** publish a privacy policy URL, fill in the Play *Data safety* form (anonymous gameplay analytics and advertising ID, used by AdMob), and set the content rating and target audience to 18+.
