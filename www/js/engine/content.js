@@ -133,10 +133,10 @@ export const TOTAL_LEVELS = CITIES.length * LEVELS_PER_CITY;
 export const GUESTS = [
   { en: 'Dadi', hi: 'दादी' }, { en: 'Priya didi', hi: 'प्रिया दीदी' }, { en: 'Meena aunty', hi: 'मीना आंटी' },
   { en: 'Ananya', hi: 'अनन्या' }, { en: 'Fatima ji', hi: 'फ़ातिमा जी' }, { en: 'Lakshmi amma', hi: 'लक्ष्मी अम्मा' },
-  { en: 'Simran', hi: 'सिमरन' }, { en: 'Rekha bua', hi: 'रेखा बुआ' }, { en: 'the kids', hi: 'बच्चे' }, { en: 'Office friends', hi: 'ऑफ़िस की सहेलियां' },
+  { en: 'Simran', hi: 'सिमरन' }, { en: 'Rekha bua', hi: 'रेखा बुआ' }, { en: 'the kids', hi: 'बच्चों' }, { en: 'office friends', hi: 'ऑफ़िस की सहेलियों' },
 ];
 
 // Mechanics are revealed gradually so every few levels bring something new to discover.
 export const INTRODUCTIONS = {
-  1: 'basics', 3: 'rowpin', 4: 'tadka', 5: 'cooker', 7: 'dough', 10: 'dabba', 13: 'lock', 16: 'sixth',
+  1: 'basics', 3: 'rowpin', 4: 'tadka', 5: 'cooker', 7: 'dough', 10: 'dabba', 11: 'combo', 13: 'lock', 17: 'sixth',
 };

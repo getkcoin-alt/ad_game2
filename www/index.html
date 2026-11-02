@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#e0115f">
+  <meta name="description" content="Masala Yatra — a cosy cooking match-3 journey across India. Cook real dishes, unlock real recipes.">
+  <title>Masala Yatra</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/baloo-2-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <div id="app">
+    <div id="splash"><div class="splash-logo">मसाला यात्रा<small>Masala Yatra</small></div></div>
+    <section id="screen-home" class="screen active"></section>
+    <section id="screen-map" class="screen"></section>
+    <section id="screen-diary" class="screen"></section>
+    <section id="screen-game" class="screen"></section>
+    <div id="modal-root"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </div>
+  <noscript>Masala Yatra needs JavaScript to run.</noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

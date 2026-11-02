@@ -1,0 +1,12 @@
+{
+  "name": "Masala Yatra",
+  "short_name": "Masala Yatra",
+  "description": "A cosy cooking match-3 journey across India.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ff8a00",
+  "theme_color": "#e0115f",
+  "lang": "en-IN",
+  "icons": [{ "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

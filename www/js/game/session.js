@@ -7,6 +7,26 @@ import { mulberry32 } from '../engine/rng.js';
 export const TADKA_MAX = 30;
 export const AD_EXTRA_MOVES = 5;
 
+/** Credit collected items to the first unfinished dish that needs them. */
+export function creditDishes(dishes, kind, amount, color) {
+  let left = amount;
+  for (const dish of dishes) {
+    for (const it of dish.items) {
+      if (left <= 0) return;
+      if (it.kind !== kind || (kind === 'ing' && it.color !== color)) continue;
+      const take = Math.min(left, it.need - it.got);
+      if (take > 0) { it.got += take; left -= take; }
+    }
+  }
+}
+
+/** Apply one clear phase to a dishes array (used by the HUD to animate progress phase by phase). */
+export function creditPhase(dishes, p) {
+  for (const [color, n] of Object.entries(p.collected)) creditDishes(dishes, 'ing', n, Number(color));
+  if (p.doughHits) creditDishes(dishes, 'dough', p.doughHits);
+  if (p.unlocked.length) creditDishes(dishes, 'lock', p.unlocked.length);
+}
+
 export class GameSession {
   constructor(level, { seedOffset = 0 } = {}) {
     this.level = level;
@@ -23,25 +43,13 @@ export class GameSession {
   }
 
   // ---------- progress ----------
-  _credit(kind, amount, color) {
-    let left = amount;
-    for (const dish of this.dishes) {
-      for (const it of dish.items) {
-        if (left <= 0) return;
-        if (it.kind !== kind || (kind === 'ing' && it.color !== color)) continue;
-        const take = Math.min(left, it.need - it.got);
-        if (take > 0) { it.got += take; left -= take; }
-      }
-    }
-  }
+  _credit(kind, amount, color) { creditDishes(this.dishes, kind, amount, color); }
 
   applyPhases(phases, { fromTadka = false } = {}) {
     const events = [];
     for (const p of phases) {
       if (p.kind !== 'clear') continue;
-      for (const [color, n] of Object.entries(p.collected)) this._credit('ing', n, Number(color));
-      if (p.doughHits) this._credit('dough', p.doughHits);
-      if (p.unlocked.length) this._credit('lock', p.unlocked.length);
+      creditPhase(this.dishes, p);
       this.score += p.score;
       this.bestCascade = Math.max(this.bestCascade, p.cascade);
       this.specialsMade += p.created.length;
