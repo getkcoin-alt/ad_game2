@@ -1,0 +1,13 @@
+{
+  "name": "masala-yatra",
+  "version": "1.0.0",
+  "description": "Masala Yatra — a cosy cooking match-3 journey across India",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "balance": "node tools/balance.mjs",
+    "serve": "node tools/serve.mjs",
+    "e2e": "node tests/e2e/smoke.mjs"
+  }
+}
