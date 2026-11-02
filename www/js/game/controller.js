@@ -103,11 +103,31 @@ export class GameScreen {
     this._updateMoves();
     this._updateBoosters();
     this._updateTadka();
+    // Gentle, transparent help: a third try on the same level comes with +3 moves from Dadi.
+    if (!level.daily && attempt >= 3) this.session.movesLeft += 3;
+    // Win streak reward: 3+ wins in a row → a free Belan placed on the board.
+    const blessed = !level.daily && level.n >= 6 && (save.winStreak || 0) >= 3 && this._bless();
+    this._updateMoves();
+    this.view.setCity(city);
     requestAnimationFrame(() => {
       this.view.attach(this.session);
       this._maybeIntro();
+      if (blessed) setTimeout(() => toast(t('blessing', { n: save.winStreak }), 3200), 400);
+      else if (!level.daily && attempt >= 3) setTimeout(() => toast(t('dadiHelp'), 3000), 400);
     });
     analytics.track('level_start', { level: level.n, daily: !!level.daily, attempt, city: level.cityId });
+  }
+
+  _bless() {
+    const b = this.session.board;
+    const cells = [];
+    for (let r = 0; r < b.rows; r++) for (let c = 0; c < b.cols; c++)
+      if (b.tiles[r][c] && !b.lock[r][c] && !b.tiles[r][c].special) cells.push([r, c]);
+    if (!cells.length) return false;
+    const [r, c] = cells[Math.floor(cells.length / 2 + (b.rng() - 0.5) * cells.length * 0.5)] || cells[0];
+    b.tiles[r][c].special = b.rng() < 0.5 ? 'row' : 'col';
+    analytics.track('blessing', { level: this.level.n, streak: save.winStreak });
+    return true;
   }
 
   _boardArea() {
@@ -375,13 +395,23 @@ export class GameScreen {
     }
     save.coins += coins;
     save.stats.levelsWon++;
+    save.winStreak = (save.winStreak || 0) + 1;
     commit(true);
     analytics.track('level_win', { level: lvl.n, daily: !!lvl.daily, moves_left: s.movesLeft, stars, attempt: this.attempt, continues: s.continues, duration_s: Math.round((Date.now() - this.startTime) / 1000), best_cascade: s.bestCascade });
     sound.win();
     haptic(40);
     confetti(this.root, 70);
     this.view.floatText(t('win1'), this.view.W / 2, this.view.H * 0.45, { size: 44, color: '#fff3c4', stroke: '#c2185b', life: 1.4 });
-    await new Promise((r) => setTimeout(r, 1100));
+    await new Promise((r) => setTimeout(r, 900));
+    // Bonus Tadka: leftover moves become rolling pins that sweep the board (pure celebration).
+    const bonus = Math.min(s.movesLeft, 10);
+    if (bonus > 0) {
+      const res = s.board.bonusFinale(bonus);
+      if (res.ok) {
+        try { await this.view.playFinale(res.phases, t('bonusTadka')); } catch { /* ignore */ }
+      }
+    }
+    await new Promise((r) => setTimeout(r, 300));
     this._winModal(stars, coins);
   }
 
@@ -396,6 +426,7 @@ export class GameScreen {
         <div class="win-dishes">${this.session.dishes.map((d) => `<span>✓ ${L(d)}</span>`).join('')}</div>
         <div class="win-coins">🪙 <b>0</b></div>
         ${this.session.bestCascade >= 3 ? `<p class="fine">${t('bestCascade', { n: this.session.bestCascade })}</p>` : ''}
+        ${!lvl.daily && save.winStreak >= 2 ? `<p class="streak-line">🔥 ${t(save.winStreak >= 3 ? 'streakActive' : 'streakLine', { n: save.winStreak })}</p>` : ''}
         <div class="modal-actions col">
           ${canDouble ? `<button class="btn ad" data-a="double">${t('doubleAd')}</button>` : ''}
           <button class="btn primary" data-a="next">${lvl.daily ? t('ok') : t('next')}</button>
@@ -481,7 +512,7 @@ export class GameScreen {
       commit(true);
       cont('coins');
     };
-    $('[data-a="retry"]', m.el).onclick = () => { m.close(); this.ended = true; save.stats.levelsLost++; commit(); this.start(lvl, { attempt: this.attempt + 1 }); };
-    $('[data-a="map"]', m.el).onclick = () => { m.close(); this.ended = true; save.stats.levelsLost++; commit(); this.exit(); };
+    $('[data-a="retry"]', m.el).onclick = () => { m.close(); this.ended = true; save.stats.levelsLost++; save.winStreak = 0; commit(); this.start(lvl, { attempt: this.attempt + 1 }); };
+    $('[data-a="map"]', m.el).onclick = () => { m.close(); this.ended = true; save.stats.levelsLost++; save.winStreak = 0; commit(); this.exit(); };
   }
 }

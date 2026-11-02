@@ -5,6 +5,7 @@ A cosy, Android-first cooking match-3 for Indian players. You cook dishes for gu
 * **No lives, no timers, no interstitials.** Rewarded ads only, always the player's choice.
 * **English + हिंदी** throughout. All art and sound are generated in code (no image or audio files).
 * **60 levels**, each balanced by a bot that plays it 60 times, plus a Daily Thali puzzle.
+* **Meri Rasoi:** decorate your own kitchen with the stars you earn. A **Bonus Tadka** finale plays at the end of each win, and every city has its own landmark skyline behind the board.
 
 The full product thinking (audience, psychology, ethics, monetisation, unit economics, analytics) is in **[docs/GAME_DESIGN.md](docs/GAME_DESIGN.md)**.
 

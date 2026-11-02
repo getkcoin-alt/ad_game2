@@ -4,7 +4,8 @@
 import { getLevel, getDailyLevel, TOTAL_LEVELS } from './engine/levels.js';
 import { CITIES, LEVELS_PER_CITY } from './engine/content.js';
 import { GameScreen, BOOSTER_COST, BOOSTER_ICON } from './game/controller.js';
-import { iconURL, tileSprite } from './render/art.js';
+import { iconURL } from './render/art.js';
+import { drawKitchen, DECOR, cityBannerURL } from './render/scenes.js';
 import { sound } from './audio.js';
 import { ads } from './ads.js';
 import { analytics } from './analytics.js';
@@ -46,7 +47,12 @@ function renderHome() {
       <div class="logo-en">Masala Yatra</div>
       <div class="tagline">${t('tagline')}</div>
     </div>
-    <canvas class="hero" width="320" height="220" aria-hidden="true"></canvas>
+    <button class="kitchen-hero" data-a="rasoi" aria-label="${t('rasoi')}">
+      <canvas class="kitchen-cv"></canvas>
+      <span class="kh-label">🏠 ${t('rasoi')}</span>
+      ${affordableDecor() ? `<span class="kh-badge">✨ ${t('decorate')} · ★${starsAvailable()}</span>` : ownedCount() === 0 ? `<span class="kh-hint">${t('rasoiEmpty')}</span>` : ''}
+    </button>
+    ${chestHTML()}
     <button class="btn primary big play-btn" data-a="play">
       <span>${done ? t('map') : t('play')}</span>
       <small>${done ? '' : `${t('levelN', { n: next })} · ${L(city)}`}</small>
@@ -58,7 +64,10 @@ function renderHome() {
       <button class="card" data-a="shelf"><span class="c-ico">🧺</span><b>${t('shelf')}</b><small>🥄${save.boosters.spoon} ✋${save.boosters.hand} 🔀${save.boosters.shuffle}</small></button>
     </div>
     <p class="footnote">${t('noLives')}</p>`;
-  drawHero($('.hero', el));
+  paintKitchen($('.kitchen-cv', el), 320, 190);
+  el.querySelector('[data-a="rasoi"]').onclick = () => { sound.tap(); openRasoi(); };
+  const chestBtn = el.querySelector('[data-a="chest"]');
+  if (chestBtn) chestBtn.onclick = () => { sound.tap(); openChest(); };
   el.querySelector('[data-a="play"]').onclick = () => { sound.tap(); done ? openMap() : openPreLevel(getLevel(next)); };
   el.querySelector('[data-a="daily"]').onclick = () => { sound.tap(); openDaily(); };
   el.querySelector('[data-a="diary"]').onclick = () => { sound.tap(); openDiary(); };
@@ -67,27 +76,119 @@ function renderHome() {
   el.querySelector('[data-a="settings"]').onclick = () => { sound.tap(); openSettings(); };
 }
 
-function drawHero(cv) {
+// ---------- Meri Rasoi (kitchen decoration with stars) ----------
+function starsAvailable() { return Math.max(0, totalStars() - (save.decor.spent || 0)); }
+function ownedCount() { return Object.keys(save.decor.using || {}).length; }
+function isOwned(slot, v) { return (save.decor.owned[slot] || []).includes(v); }
+function affordableDecor() {
+  const have = starsAvailable();
+  return DECOR.some((d) => d.v.some((_, i) => !isOwned(d.id, i) && d.cost <= have));
+}
+
+function paintKitchen(cv, w, h, t = 0) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const W = 320, H = 220;
-  cv.width = W * dpr; cv.height = H * dpr;
+  if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
   const ctx = cv.getContext('2d');
-  ctx.scale(dpr, dpr);
-  // brass thali
-  const g = ctx.createRadialGradient(W / 2 - 30, H / 2 - 30, 10, W / 2, H / 2, 110);
-  g.addColorStop(0, '#fff1c1'); g.addColorStop(0.6, '#e8b04a'); g.addColorStop(1, '#a8701e');
-  ctx.fillStyle = 'rgba(90,40,0,0.25)';
-  ctx.beginPath(); ctx.ellipse(W / 2, H / 2 + 10, 120, 92, 0, 0, 7); ctx.fill();
-  ctx.fillStyle = g;
-  ctx.beginPath(); ctx.ellipse(W / 2, H / 2, 118, 90, 0, 0, 7); ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.ellipse(W / 2, H / 2, 100, 76, 0, 0, 7); ctx.stroke();
-  const px = Math.round(64 * dpr);
-  const spots = [[0, -60, -38], [1, 0, -52], [2, 60, -38], [3, -72, 18], [4, 72, 18], [5, -26, 40], [-1, 30, 40]];
-  for (const [c, x, y] of spots) {
-    const spr = c < 0 ? tileSprite(0, 'dabba', px) : tileSprite(c, null, px);
-    ctx.drawImage(spr, W / 2 + x - 32, H / 2 + y - 32, 64, 64);
-  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  drawKitchen(ctx, w, h, save.decor.using, t);
+}
+
+let rasoiLoop = 0;
+function openRasoi() {
+  show('rasoi');
+  const el = $('#screen-rasoi');
+  const lang = getLang();
+  const render = () => {
+    el.innerHTML = `
+      <div class="topbar"><button class="icon-btn" data-a="back" aria-label="Back">←</button><h2>${t('rasoi')}</h2><div class="pill">★ ${starsAvailable()}</div></div>
+      <div class="rasoi-stage"><canvas class="rasoi-cv"></canvas></div>
+      <p class="rasoi-sub">${t('rasoiSub')} · ${t('starsToSpend', { n: starsAvailable() })}</p>
+      <div class="decor-list">${DECOR.map((d) => `
+        <div class="decor-row">
+          <div class="decor-name">${lang === 'hi' ? d.hi : d.en}</div>
+          <div class="decor-opts">${d.v.map((v, i) => {
+            const using = save.decor.using[d.id] === i, owned = isOwned(d.id, i), can = starsAvailable() >= d.cost;
+            return `<button class="decor-opt ${using ? 'using' : owned ? 'owned' : can ? 'buy' : 'locked'}" data-slot="${d.id}" data-v="${i}">
+              <span class="d-ico">${v[2]}</span><span class="d-name">${lang === 'hi' ? v[1] : v[0]}</span>
+              <span class="d-state">${using ? '✓ ' + t('using') : owned ? t('apply') : '★ ' + d.cost}</span></button>`;
+          }).join('')}</div>
+        </div>`).join('')}</div>`;
+    $('[data-a="back"]', el).onclick = () => { sound.tap(); cancelAnimationFrame(rasoiLoop); goHome(); };
+    $$('.decor-opt', el).forEach((b) => b.onclick = () => {
+      const slot = b.dataset.slot, v = Number(b.dataset.v);
+      const d = DECOR.find((x) => x.id === slot);
+      if (save.decor.using[slot] === v) return;
+      if (!isOwned(slot, v)) {
+        if (starsAvailable() < d.cost) { toast(t('needStars')); sound.invalid(); return; }
+        save.decor.spent = (save.decor.spent || 0) + d.cost;
+        save.decor.owned[slot] = [...(save.decor.owned[slot] || []), v];
+        analytics.track('decor_buy', { slot, variant: v, cost: d.cost });
+        sound.special();
+        toast(`✨ ${t('newDecor')}`);
+      } else sound.tap();
+      save.decor.using[slot] = v;
+      commit(true);
+      render();
+      const stage = $('.rasoi-stage', el);
+      stage.classList.add('pop');
+      confetti(stage, 30);
+    });
+    startLoop();
+  };
+  const startLoop = () => {
+    cancelAnimationFrame(rasoiLoop);
+    const cv = $('.rasoi-cv', el);
+    const w = Math.min(el.clientWidth - 32, 488), h = Math.round(w * 0.68);
+    cv.style.width = w + 'px'; cv.style.height = h + 'px';
+    let last = 0;
+    const frame = (now) => {
+      if (current !== 'rasoi' || document.hidden) return;
+      if (now - last > 66) { paintKitchen(cv, w, h, now); last = now; } // ~15 fps is plenty for flickering diyas
+      rasoiLoop = requestAnimationFrame(frame);
+    };
+    rasoiLoop = requestAnimationFrame(frame);
+  };
+  render();
+  analytics.track('rasoi_open', { owned: ownedCount(), stars: starsAvailable() });
+}
+
+// ---------- Masala Box (fixed reward every 15 stars — no randomness) ----------
+const CHEST_STARS = 15;
+const CHEST_BOOSTERS = ['spoon', 'hand', 'shuffle'];
+function chestState() {
+  const total = totalStars();
+  const earned = Math.floor(total / CHEST_STARS);
+  return { ready: earned > (save.chests || 0), progress: total - (save.chests || 0) * CHEST_STARS };
+}
+function chestHTML() {
+  const st = chestState();
+  const p = Math.min(CHEST_STARS, st.progress);
+  return `<button class="chest-bar ${st.ready ? 'ready' : ''}" data-a="chest">
+    <span class="chest-ico">🎁</span>
+    <span class="chest-txt"><b>${st.ready ? t('chestReady') : t('chest')}</b><small>${st.ready ? t('open') + ' →' : t('chestSub')}</small></span>
+    <span class="chest-prog"><i style="width:${(p / CHEST_STARS) * 100}%"></i><em>★ ${p}/${CHEST_STARS}</em></span>
+  </button>`;
+}
+function openChest() {
+  const st = chestState();
+  if (!st.ready) { toast(t('chestSub')); return; }
+  const booster = CHEST_BOOSTERS[(save.chests || 0) % 3];
+  const coins = 80;
+  save.chests = (save.chests || 0) + 1;
+  save.coins += coins;
+  save.boosters[booster]++;
+  commit(true);
+  analytics.track('chest_open', { index: save.chests, booster });
+  const m = openModal(`
+    <div class="center chest-open">
+      <div class="chest-anim">🎁</div>
+      <h2>${t('chest')}</h2>
+      <p class="chest-got">${t('chestGot', { c: coins, b: `${BOOSTER_ICON[booster]} ${t(booster)}` })}</p>
+      <button class="btn primary wide" data-a="ok">${t('claim')}</button>
+    </div>`, { dismiss: false });
+  sound.dabba();
+  setTimeout(() => { m.el.querySelector('.chest-anim').textContent = '✨'; confetti(m.el, 40); sound.coin(); }, 900);
+  $('[data-a="ok"]', m.el).onclick = () => { m.close(); renderHome(); };
 }
 
 // ---------- map ----------
@@ -114,7 +215,7 @@ function openMap(focusLevel) {
       <section class="city ${unlockedCity ? '' : 'locked'}" style="--tint1:${city.tint[0]};--tint2:${city.tint[1]}" data-city="${city.id}">
         <div class="city-recipe ${recipeHave ? 'have' : ''}" data-recipe="${city.id}">📖 ${recipeHave ? L(city.recipe) : t('recipeTease')}</div>
         ${unlockedCity ? `<div class="path">${nodes}</div>` : `<div class="city-teaser"><b>${t('nextStop')}</b> · ${t('unlockAfter', { city: L(CITIES[ci - 1]) })}<br><span>${t('signature')}: ${ci === Math.floor((save.unlocked - 1) / LEVELS_PER_CITY) + 1 ? L(city.dishes[4]) : '???'}</span></div>`}
-        <div class="city-head">
+        <div class="city-head" style="background-image:linear-gradient(120deg, ${city.tint[0]}b0, ${city.tint[1]}66), url(${cityBannerURL(city)})">
           <div><h3>${L(city)}</h3><p>${L(city.blurb)}</p></div>
           <div class="city-meta">${unlockedCity ? `★ ${cityStars}/${LEVELS_PER_CITY * 3}` : '🔒'}</div>
         </div>

@@ -24,13 +24,16 @@ export function defaultSave() {
     adCaps: { date: null, counts: {} },
     stats: { sessions: 0, levelsWon: 0, levelsLost: 0, totalPlayMs: 0, adsWatched: 0, firstOpen: Date.now() },
     privacyAccepted: false,
+    winStreak: 0,
+    decor: { owned: {}, using: {}, spent: 0 },
+    chests: 0,
   };
 }
 
 function migrate(data) {
   const base = defaultSave();
   const merged = { ...base, ...data };
-  for (const k of ['boosters', 'settings', 'daily', 'gift', 'adCaps', 'stats']) merged[k] = { ...base[k], ...(data[k] || {}) };
+  for (const k of ['boosters', 'settings', 'daily', 'gift', 'adCaps', 'stats', 'decor']) merged[k] = { ...base[k], ...(data[k] || {}) };
   merged.v = VERSION;
   return merged;
 }

@@ -29,6 +29,18 @@ kids leave for school, the commute, a lunch break, the half hour after dinner.
 6. **A wellbeing feature, not a retention trick.** After 30 minutes of active play, a gentle *Chai break?* card appears between levels (never mid-level). The player can turn it off.
 7. **Readable for everyone.** The six ingredients have distinct silhouettes (chilli, lemon, leaf, onion bulb, garlic bulb, kulhad cup), so the board works for colour-blind players. There's a reduce-motion option, and the game is fully bilingual (English and हिंदी).
 
+## 2b. Retention & delight layer (v1.1)
+
+| Feature | Why it works | Ethical guard-rail |
+|---|---|---|
+| **Meri Rasoi:** decorate your own kitchen with ★ (9 slots × 3 styles: walls, floor, stove, shelf, window, toran, plant, lights, rangoli) | Visible, personal, lasting progress (the endowment effect). A reason to replay for 3★ (mastery). The home screen shows your kitchen and a "Decorate ★N" badge | Bought with stars earned by playing, never with money or ads. Spending stars never lowers map progress |
+| **Bonus Tadka finale:** leftover moves turn into rolling pins that sweep the board | A big celebratory payoff that rewards efficient play | Purely cosmetic; stars and coins are decided before it plays |
+| **Living city scenes:** a landmark skyline behind the board for every city (Gateway of India, Hawa Mahal, India Gate, Golden Temple, Howrah Bridge, Charminar…) | Sense of place and travel; curiosity about the next city | Rendered once per level, so it costs no extra battery |
+| **Game feel:** tiles squash on landing, shockwave on special creation, zoom and flash on big combos, sparkle trails on collected ingredients, glowing specials | Satisfying feedback on every action (competence) | Respects the Reduce-motion setting |
+| **Dadi's Blessing:** 3+ wins in a row puts a free Belan on the next board | Positive momentum | A loss only resets the streak; nothing earned is taken away |
+| **Dadi's help:** a third attempt at the same level gets +3 moves, and the game says so | Cuts frustration churn at difficulty spikes | Transparent and the same for every player; no hidden rubber-banding |
+| **Masala Box:** a box every 15 ★ with a fixed reward (80 coins + a booster, rotating) | Goal-gradient progress bar on the home screen | No randomness: the contents are known in advance, so it's not a loot box |
+
 ## 3. Core loop
 
 ```
@@ -124,7 +136,7 @@ Events are implemented in `www/js/analytics.js`. They go to a local queue, and t
 | Level funnel & difficulty | `level_start`, `level_win` (moves_left, stars, attempt, continues, duration), `level_fail` (progress), `level_quit` |
 | Monetisation | `ad_offer`, `ad_start`, `ad_reward`, `ad_skip`, `ad_fail`, `continue_offer`, `continue_accept` (method) |
 | Economy | `booster_use`, `booster_get` (source), `gift_claim`, `daily_win` (streak) |
-| Delight & virality | `tadka_use`, `recipe_unlock`, `recipe_share` |
+| Delight & virality | `tadka_use`, `recipe_unlock`, `recipe_share`, `decor_buy`, `rasoi_open`, `chest_open`, `blessing` |
 | Wellbeing | `break_prompt`, `break_taken`, `setting_change` |
 | Retention | `app_open.day_index`, `session_end.duration_s` |
 

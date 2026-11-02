@@ -212,3 +212,14 @@ test('session credits dishes, tracks tadka and supports continues', () => {
   assert.ok(s.progressRatio() >= before);
   assert.equal(s.tadka >= 0, true);
 });
+
+test('bonus finale converts tiles to pins and fires them', () => {
+  const b = mk(Array(7).fill('.......'), 5, 21);
+  const res = b.bonusFinale(5);
+  assert.ok(res.ok);
+  const first = res.phases[0];
+  assert.equal(first.converted.length, 5);
+  assert.ok(first.cleared.length >= 7);
+  invariants(b);
+  assert.equal(new Board({ layout: ['L'], colors: 3 }, mulberry32(1)).bonusFinale(3).ok, false);
+});

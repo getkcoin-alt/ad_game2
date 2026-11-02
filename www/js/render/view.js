@@ -3,6 +3,7 @@
 // something is moving, to save battery on budget phones.
 
 import { tileSprite, doughSprite, lockSprite } from './art.js';
+import { drawCityScene } from './scenes.js';
 import { INGREDIENTS } from '../engine/content.js';
 
 const EASE = {
@@ -66,6 +67,7 @@ export class BoardView {
     this.by = Math.round(area.top + pad + (availH - cs * this.board.rows) / 2);
     this.spritePx = Math.round(cs * dpr);
     this._renderBackground();
+    this._renderScene();
     this.requestFrame();
   }
 
@@ -79,6 +81,27 @@ export class BoardView {
     this.vDough = b.dough.map((row) => [...row]);
     this.vLock = b.lock.map((row) => [...row]);
     this.requestFrame();
+  }
+
+  setCity(city) { this.city = city; this._renderScene(); }
+
+  _renderScene() {
+    if (!this.city || !this.W) { this.scene = null; return; }
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(this.W * this.dpr); cv.height = Math.round(this.H * this.dpr);
+    const g = cv.getContext('2d');
+    g.scale(this.dpr, this.dpr);
+    drawCityScene(g, this.W, this.H, this.city);
+    this.scene = cv;
+    // soft golden halo used behind special tiles
+    const hp = this.spritePx || 64;
+    const halo = document.createElement('canvas');
+    halo.width = halo.height = hp * 2;
+    const hg = halo.getContext('2d');
+    const grad = hg.createRadialGradient(hp, hp, hp * 0.2, hp, hp, hp);
+    grad.addColorStop(0, 'rgba(255,230,120,0.85)'); grad.addColorStop(0.5, 'rgba(255,170,40,0.35)'); grad.addColorStop(1, 'rgba(255,170,40,0)');
+    hg.fillStyle = grad; hg.fillRect(0, 0, hp * 2, hp * 2);
+    this.halo = halo;
   }
 
   _mkSprite(t, r, c) {
@@ -194,6 +217,12 @@ export class BoardView {
     for (let i = this.flyers.length - 1; i >= 0; i--) {
       const f = this.flyers[i];
       f.t += 0.028;
+      if (f.t > 0 && f.t < 1) {
+        const e = EASE.inQuad(f.t);
+        f.x = f.x0 + (f.x1 - f.x0) * e;
+        f.y = f.y0 + (f.y1 - f.y0) * e - Math.sin(f.t * Math.PI) * 60;
+        if (!this.opts.reduceMotion() && Math.random() < 0.6) this.particles.push({ x: f.x, y: f.y, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8, life: 0.7, decay: 0.05, size: 1.5 + Math.random() * 2, color: Math.random() < 0.5 ? '#fff6c2' : '#ffd23f', kind: 'dot' });
+      }
       if (f.t >= 1) { this.flyers.splice(i, 1); if (f.onArrive) f.onArrive(); }
     }
     this.shake *= 0.86;
@@ -204,11 +233,16 @@ export class BoardView {
     const ctx = this.ctx, dpr = this.dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, this.W, this.H);
+    if (this.scene) ctx.drawImage(this.scene, 0, 0, this.W, this.H);
     if (!this.board) return;
     const sx = this.shake > 0.01 ? (Math.random() - 0.5) * this.shake : 0;
     const sy = this.shake > 0.01 ? (Math.random() - 0.5) * this.shake : 0;
     ctx.save();
     ctx.translate(sx, sy);
+    if (this.zoom && Math.abs(this.zoom - 1) > 0.001) {
+      const zx = this.bx + this.board.cols * this.cs / 2, zy = this.by + this.board.rows * this.cs / 2;
+      ctx.translate(zx, zy); ctx.scale(this.zoom, this.zoom); ctx.translate(-zx, -zy);
+    }
     ctx.drawImage(this.bg, this.bx - 12, this.by - 12, this.bg.width / dpr, this.bg.height / dpr);
     const cs = this.cs, b = this.board;
     // dough
@@ -240,13 +274,21 @@ export class BoardView {
         x += dir[1] * k * cs * 0.6; y += dir[0] * k * cs * 0.6;
       }
       const size = cs * scale;
+      const sq = s.sq || 0;
+      const sw = size * (1 + sq), sh = size * (1 - sq);
+      const yOff = (size - sh) / 2;
+      if (s.special && this.halo) {
+        const pulse = 1.05 + Math.sin(now / 260 + s.id) * 0.08;
+        ctx.globalAlpha = s.alpha * 0.9;
+        ctx.drawImage(this.halo, x - size * 0.62 * pulse, y - size * 0.62 * pulse, size * 1.24 * pulse, size * 1.24 * pulse);
+      }
       ctx.globalAlpha = s.alpha;
       if (rot) {
         ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
-        ctx.drawImage(tileSprite(s.color, s.special, this.spritePx), -size / 2, -size / 2, size, size);
+        ctx.drawImage(tileSprite(s.color, s.special, this.spritePx), -sw / 2, -sh / 2 + yOff, sw, sh);
         ctx.restore();
       } else {
-        ctx.drawImage(tileSprite(s.color, s.special, this.spritePx), x - size / 2, y - size / 2, size, size);
+        ctx.drawImage(tileSprite(s.color, s.special, this.spritePx), x - sw / 2, y - sh / 2 + yOff, sw, sh);
       }
       if (s.flash > 0.01) {
         ctx.globalAlpha = s.flash * s.alpha;
@@ -278,9 +320,8 @@ export class BoardView {
     // flyers (collected ingredients heading to the order cards)
     for (const f of this.flyers) {
       if (f.t < 0) continue;
-      const t = EASE.inQuad(f.t);
-      const x = f.x0 + (f.x1 - f.x0) * t;
-      const y = f.y0 + (f.y1 - f.y0) * t - Math.sin(f.t * Math.PI) * 60;
+      if (f.x == null) continue;
+      const x = f.x, y = f.y;
       const size = cs * (0.8 - 0.35 * f.t);
       ctx.drawImage(tileSprite(f.color, null, this.spritePx), x - size / 2, y - size / 2, size, size);
     }
@@ -408,6 +449,11 @@ export class BoardView {
       }
     }
     if (big >= 2) { this.shake = 4 + big * 2; this.opts.haptics(big >= 3 ? 40 : 25); }
+    if (big >= 3 && !this.opts.reduceMotion()) {
+      this.zoom = 1.07;
+      this.tween(this, { zoom: 1 }, 420, 'outQuad');
+      this.beams.push({ type: 'flash', life: 0.5 });
+    }
     // converted tiles flash into specials
     for (const cv of p.converted) {
       const s = this.sprites.get(cv.id);
@@ -423,7 +469,7 @@ export class BoardView {
     for (const cl of p.cleared) {
       const s = this.sprites.get(cl.id);
       const { x, y } = this.cellCenter(cl.r, cl.c);
-      this.burst(x, y, cl.color >= 0 ? INGREDIENTS[cl.color].hex : '#fff6d0', big ? 6 : 8);
+      this.burst(x, y, cl.color >= 0 ? INGREDIENTS[cl.color].hex : '#fff6d0', p.cleared.length > 30 ? 2 : p.cleared.length > 14 ? 4 : big ? 6 : 8);
       if (cl.color >= 0 && needed.includes(cl.color) && flown < 14) {
         const target = this.opts.getTarget(cl.color);
         if (target) { flown++; this.flyers.push({ color: cl.color, x0: x, y0: y, x1: target.x, y1: target.y, t: -flown * 0.035 }); }
@@ -460,6 +506,12 @@ export class BoardView {
         s.scale = 0; s.flash = 1;
         this.sprites.set(cr.id, s);
         this.tween(s, { scale: 1 }, 260, 'outBack');
+        this.beams.push({ type: 'ring', r: cr.r, c: cr.c, radius: 1.4, life: 0.9 });
+        const pc = this.cellCenter(cr.r, cr.c);
+        for (let i = 0; i < 10; i++) {
+          const a = (i / 10) * Math.PI * 2;
+          this.particles.push({ x: pc.x, y: pc.y, vx: Math.cos(a) * 3.2, vy: Math.sin(a) * 3.2, life: 1, decay: 0.03, size: 3, color: i % 2 ? '#fff3b0' : '#ffb300', kind: 'spark' });
+        }
         this.tween(s, { flash: 0 }, 320);
       }
       audio.special();
@@ -479,7 +531,9 @@ export class BoardView {
       }
       const dist = Math.hypot(m.toR - s.y, m.toC - s.x);
       maxDist = Math.max(maxDist, dist);
-      proms.push(this.tween(s, { x: m.toC, y: m.toR }, 120 + Math.sqrt(dist) * 110, 'fall'));
+      proms.push(this.tween(s, { x: m.toC, y: m.toR }, 120 + Math.sqrt(dist) * 110, 'fall').then(() => {
+        if (dist >= 0.9 && !this.opts.reduceMotion()) { s.sq = Math.min(0.18, 0.06 + dist * 0.03); this.tween(s, { sq: 0 }, 200, 'outBack'); }
+      }));
     }
     if (maxDist > 0) this.opts.audio.land();
     await Promise.all(proms);
@@ -494,6 +548,14 @@ export class BoardView {
       s.color = m.color;
       return this.tween(s, { x: m.toC, y: m.toR }, 420, 'outBack');
     }));
+  }
+
+  /** Level-complete celebration: leftover moves become rolling pins that fire. */
+  async playFinale(phases, label) {
+    this.floatText(label, this.W / 2, this.by + this.board.rows * this.cs * 0.35, { size: 42, color: '#fff3c4', stroke: '#e65100', life: 1.3 });
+    this.opts.audio.sizzle();
+    await this.wait(450);
+    await this.play(phases);
   }
 
   // ---------- hints ----------

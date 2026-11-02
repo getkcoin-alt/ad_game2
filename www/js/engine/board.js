@@ -280,6 +280,18 @@ export class Board {
         }
       } else if (seed.type === 'tadka') {
         enqueueArea(seed.cells);
+      } else if (seed.type === 'bonus') {
+        info.targets = [];
+        for (const [y, x] of seed.cells) {
+          const t = this.tiles[y][x];
+          if (!t) continue;
+          if (!t.special) {
+            t.special = this.rng() < 0.5 ? SP.ROW : SP.COL;
+            phase.converted.push({ id: t.id, r: y, c: x, special: t.special });
+          }
+          info.targets.push([y, x]);
+          queue.push({ r: y, c: x, byMatch: false });
+        }
       }
       phase.activated.push(info);
     };
@@ -505,6 +517,16 @@ export class Board {
     for (let r = 0; r < this.rows; r++) for (let c = 0; c < this.cols; c++) if (this.tiles[r][c] || this.lock[r][c]) rest.push([r, c]);
     for (const [r, c] of this.rng.shuffle(rest)) take(r, c);
     return { ok: true, phases: this._cascade([], { seeds: [{ type: 'tadka', cells: picked }] }) };
+  }
+
+  /** End-of-level celebration: up to `n` random ingredients become rolling pins and fire. */
+  bonusFinale(n) {
+    const cells = [];
+    for (let r = 0; r < this.rows; r++) for (let c = 0; c < this.cols; c++)
+      if (this.tiles[r][c] && !this.lock[r][c] && !this.tiles[r][c].special) cells.push([r, c]);
+    const picked = this.rng.shuffle(cells).slice(0, Math.max(0, n));
+    if (!picked.length) return { ok: false, phases: [] };
+    return { ok: true, phases: this._cascade([], { seeds: [{ type: 'bonus', cells: picked }] }) };
   }
 
   shuffle() {

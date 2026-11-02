@@ -2,6 +2,11 @@
 
 const STR = {
   en: {
+    bonusTadka: 'Bonus Tadka!', blessing: '🔥 {n} wins in a row — Dadi’s blessing: a free Belan!', dadiHelp: 'Dadi gives you +3 moves for this try 💛',
+    streakLine: '{n} wins in a row! Win 3 for Dadi’s blessing.', streakActive: '{n} wins in a row — Dadi’s blessing is on your next level!',
+    rasoi: 'Meri Rasoi', rasoiSub: 'Decorate your kitchen with ★', decorate: 'Decorate', starsToSpend: '★ {n} to spend', using: 'Using', owned: 'Owned', apply: 'Use', needStars: 'Earn more ★ — replay levels for 3 stars!',
+    rasoiEmpty: 'Your kitchen is waiting — earn ★ to decorate it', newDecor: 'New decor!',
+    chest: 'Masala Box', chestSub: 'Every 15 ★ fills a box', chestReady: 'Masala Box ready!', open: 'Open', chestGot: 'Inside: 🪙 {c} and 1× {b}',
     title: 'Masala Yatra', tagline: 'A cosy cooking journey across India',
     play: 'Play', level: 'Level', levelN: 'Level {n}', moves: 'Moves', map: 'Yatra Map',
     daily: 'Daily Thali', dailySub: 'A fresh puzzle every day', dailyDone: 'Done for today ✓', streak: '{n}-day streak',
@@ -44,6 +49,11 @@ const STR = {
     allDone: 'You’ve completed the Yatra! New cities are being cooked up — check back soon. Meanwhile, replay levels for 3 stars and enjoy the Daily Thali.',
   },
   hi: {
+    bonusTadka: 'बोनस तड़का!', blessing: '🔥 लगातार {n} जीत — दादी का आशीर्वाद: मुफ़्त बेलन!', dadiHelp: 'इस बार दादी की ओर से +3 चालें 💛',
+    streakLine: 'लगातार {n} जीत! 3 जीत पर दादी का आशीर्वाद।', streakActive: 'लगातार {n} जीत — अगले लेवल पर दादी का आशीर्वाद!',
+    rasoi: 'मेरी रसोई', rasoiSub: '★ से अपनी रसोई सजाएं', decorate: 'सजाएं', starsToSpend: 'ख़र्च करने को ★ {n}', using: 'लगा है', owned: 'आपका', apply: 'लगाएं', needStars: 'और ★ कमाएं — 3 सितारों के लिए लेवल दोबारा खेलें!',
+    rasoiEmpty: 'आपकी रसोई इंतज़ार कर रही है — ★ कमाकर सजाएं', newDecor: 'नई सजावट!',
+    chest: 'मसाला बॉक्स', chestSub: 'हर 15 ★ पर एक बॉक्स', chestReady: 'मसाला बॉक्स तैयार!', open: 'खोलें', chestGot: 'अंदर: 🪙 {c} और 1× {b}',
     title: 'मसाला यात्रा', tagline: 'पूरे भारत की स्वादिष्ट रसोई यात्रा',
     play: 'खेलें', level: 'लेवल', levelN: 'लेवल {n}', moves: 'चालें', map: 'यात्रा नक्शा',
     daily: 'आज की थाली', dailySub: 'हर दिन नई पहेली', dailyDone: 'आज का पूरा ✓', streak: '{n} दिन लगातार',

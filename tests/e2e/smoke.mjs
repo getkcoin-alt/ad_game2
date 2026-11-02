@@ -58,7 +58,8 @@ for (let i = 0; i < 40; i++) {
   if (i === 1) { await wait(180); await shot('10-midturn'); }
   await wait(900);
 }
-await wait(1600);
+await p.waitForSelector('.win-modal', { timeout: 15000 }).catch(() => {});
+await wait(1500);
 await shot('11-win');
 const won = await p.$('.win-modal');
 if (!won) throw new Error('level 1 was not won with hint moves');
@@ -128,8 +129,26 @@ await wait(250);
 await shot('21-tadka');
 await wait(2000);
 
+step('meri rasoi + masala box');
+await p.evaluate(() => { const s = window.__my.save; for (let i = 1; i <= 8; i++) s.stars[i] = 3; s.decor = { owned: {}, using: {}, spent: 0 }; s.chests = 0; window.__my.goHome(); });
+await wait(400);
+await shot('22-home-kitchen');
+await p.click('[data-a="chest"]', { force: true });
+await wait(1100);
+await p.click('[data-a="ok"]', { force: true });
+await wait(300);
+await p.click('[data-a="rasoi"]', { force: true });
+await wait(400);
+await p.click('.decor-opt[data-slot="wall"][data-v="0"]', { force: true });
+await p.click('.decor-opt[data-slot="stove"][data-v="1"]', { force: true });
+await wait(400);
+await shot('23-rasoi');
+const decor = await p.evaluate(() => window.__my.save.decor);
+if (decor.using.wall !== 0 || decor.using.stove !== 1 || decor.spent !== 5) throw new Error('decor purchase failed ' + JSON.stringify(decor));
+step('decor bought, ★ spent = ' + decor.spent);
+
 const evs = await p.evaluate(() => (window.__myEvents || []).map((e) => e.name));
-for (const need of ['app_open', 'privacy_accepted', 'level_start', 'level_win', 'level_fail', 'ad_reward', 'continue_accept', 'tadka_use']) {
+for (const need of ['app_open', 'privacy_accepted', 'level_start', 'level_win', 'level_fail', 'ad_reward', 'continue_accept', 'tadka_use', 'chest_open', 'decor_buy']) {
   if (!evs.includes(need)) throw new Error('missing analytics event ' + need);
 }
 step(`analytics ok (${evs.length} events)`);
