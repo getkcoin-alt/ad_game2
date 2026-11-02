@@ -1,0 +1,17 @@
+{
+  "appId": "in.masalayatra.game",
+  "appName": "Masala Yatra",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#ff8a00",
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 600,
+      "backgroundColor": "#ff8a00",
+      "showSpinner": false
+    }
+  }
+}

@@ -69,8 +69,15 @@ export class GameScreen {
     $$('.booster', root).forEach((el) => el.addEventListener('click', () => this.useBooster(el.dataset.b)));
     $('.tadka-btn', root).addEventListener('click', () => this.useTadka());
     $('.mode-banner button', root).addEventListener('click', () => this.setMode('swap'));
-    window.addEventListener('resize', () => { if (this.session) this.view.relayout(); });
-    setInterval(() => this._idleTick(), 1000);
+    this._onResize = () => { if (this.session) this.view.relayout(); };
+    window.addEventListener('resize', this._onResize);
+    this._idleTimer = setInterval(() => this._idleTick(), 1000);
+  }
+
+  destroy() {
+    window.removeEventListener('resize', this._onResize);
+    clearInterval(this._idleTimer);
+    this.root.innerHTML = '';
   }
 
   // ---------- lifecycle ----------

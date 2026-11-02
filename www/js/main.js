@@ -426,8 +426,8 @@ function openSettings() {
 }
 
 function rebuildForLanguage() {
+  if (game) game.destroy();
   game = null;
-  $('#screen-game').innerHTML = '';
   if (current === 'map') openMap(); else if (current === 'diary') openDiary(); else goHome();
 }
 
