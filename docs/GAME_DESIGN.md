@@ -41,6 +41,29 @@ kids leave for school, the commute, a lunch break, the half hour after dinner.
 | **Dadi's help:** a third attempt at the same level gets +3 moves, and the game says so | Cuts frustration churn at difficulty spikes | Transparent and the same for every player; no hidden rubber-banding |
 | **Masala Box:** a box every 15 ★ with a fixed reward (80 coins + a booster, rotating) | Goal-gradient progress bar on the home screen | No randomness: the contents are known in advance, so it's not a loot box |
 
+## 2c. Sound, music & daily rhythm (v1.3) — research-led
+
+**What the research says**
+* Women are about **45% of India's gamers**, mostly 18–30 and largely outside the metros, and they prefer casual and puzzle games ([Lumikai via Outlook Respawn](https://respawn.outlookindia.com/gaming/gaming-news/lumikai-women-now-make-up-45-of-indias-gamers), [Storyboard18](https://www.storyboard18.com/gaming-news/women-make-up-45-percent-of-indias-gamers-mostly-18-30-and-beyond-metros-lumikai-83700.htm)). Over half of puzzle players are **35+** ([YourStory, 2026](https://yourstory.com/2026/07/indias-mobile-gaming-revenue-reach-24-billion-2029-report)).
+* **Many casual players play muted.** Survey estimates vary widely, and puzzle players are among the most likely to turn sound off ([TapResearch](https://blog.tapresearch.com/how-sound-preferences-impact-player-engagement)). So every piece of feedback must work silently: visuals and haptics first.
+* **When sound is on, it matters.** A King case study reported first-day retention up ~0.9 points from new sound effects alone and **~9.5 points with new sound effects plus music** ([Azur Games / PocketGamer.biz](https://www.pocketgamer.biz/azur-games-breaks-down-the-benefits-of-sound-design)). That is a single case study; an academic study of a puzzle game found little effect ([CHI 2011](https://grail.cs.washington.edu/projects/game-abtesting/chi2011/chi2011.pdf)). So we invest in music, ship it on by default and measure it with an A/B test, rather than assuming.
+* **Cultural anchor:** Hindustani music assigns ragas to times of day: Bhairav at dawn, Sarang at midday, Yaman in the evening, Malkauns late at night ([time theory of ragas](https://www.hindustaniclassical.com/article/the-time-theory-of-ragas:-a-confluence-of-sound,-science,-and-sentiment), [Swarganga](https://www.swarganga.org/articles/icmconcepts/icm9)).
+
+**What we built**
+| Feature | Why it's compelling | Guard-rail |
+|---|---|---|
+| **Raag of the hour:** the soundtrack follows the player's local time (8 ragas) | A familiar, comforting, distinctly Indian identity; the music always "fits" the moment, and it gives a reason to notice the game at different times of day | Generated in code: 0 KB of audio files and no streaming data cost |
+| **Layered live score:** tanpura drone → tabla *theka* (Keherwa in play, Dadra in menus) → santoor or bansuri melody → manjira and shaker | Melodies use an **A A B A′** form with repeated motifs, which is what makes a tune catchy. Rest sections let it breathe so it doesn't become grating | Low volume under the sound effects; one-tap toggle on the home screen |
+| **Adaptive intensity:** combos raise the energy (faster tempo, busier *laggi* tabla, shaker); the last 4 moves add tension | Music that reacts to the player is a strong feeling of being *in it* (flow) | It decays back to calm by itself, with no constant hype |
+| **Sound effects in key:** match sounds climb the current raga with each cascade; specials ring ghungroo bells; signature dishes get a **shankh** (conch) | Every action sounds musical, and the harmony between effects and score is satisfying | — |
+| **Tihai win cadence:** a tabla phrase played three times that lands on *sam* | The classical "ending" any Indian listener recognises: deeply satisfying closure | Plays even with music off (it's the win sound) |
+| **Daily Rasoi Quests:** 3 small goals a day with fixed coin rewards, plus a bonus for all 3 | A reason to open the game today that fits a short session | No countdowns, nothing lost for skipping a day, no randomness |
+| **WhatsApp brag card:** a shareable win image with stars, dishes and *your* kitchen | Social pride and free, trusted word-of-mouth on the channel this audience lives on | Opt-in; no contact access |
+
+Listen: rendered previews are in `docs/audio-previews/` (menu at evening, gameplay at midday, a dawn combo with the tihai win, late night).
+
+**Measure it:** A/B test music default on vs off; compare D1/D7, session length, `setting_change{key:music}` opt-outs and `share_win` rate.
+
 ## 3. Core loop
 
 ```
@@ -136,7 +159,7 @@ Events are implemented in `www/js/analytics.js`. They go to a local queue, and t
 | Level funnel & difficulty | `level_start`, `level_win` (moves_left, stars, attempt, continues, duration), `level_fail` (progress), `level_quit` |
 | Monetisation | `ad_offer`, `ad_start`, `ad_reward`, `ad_skip`, `ad_fail`, `continue_offer`, `continue_accept` (method) |
 | Economy | `booster_use`, `booster_get` (source), `gift_claim`, `daily_win` (streak) |
-| Delight & virality | `tadka_use`, `recipe_unlock`, `recipe_share`, `decor_buy`, `rasoi_open`, `chest_open`, `blessing` |
+| Delight & virality | `tadka_use`, `recipe_unlock`, `recipe_share`, `share_win`, `decor_buy`, `rasoi_open`, `chest_open`, `blessing`, `quest_done`, `quest_claim`, `quest_bonus` |
 | Wellbeing | `break_prompt`, `break_taken`, `setting_change` |
 | Retention | `app_open.day_index`, `session_end.duration_s` |
 

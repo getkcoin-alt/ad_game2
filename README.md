@@ -5,6 +5,8 @@ A cosy, Android-first cooking match-3 for Indian players. You cook dishes for gu
 * **No lives, no timers, no interstitials.** Rewarded ads only, always the player's choice.
 * **English + हिंदी** throughout. All art and sound are generated in code (no image or audio files).
 * **60 levels**, each balanced by a bot that plays it 60 times, plus a Daily Thali puzzle.
+* **A live Indian soundtrack** that follows the time of day (Raag Bhairav at dawn … Malkauns late at night): tabla, tanpura, santoor and bansuri, all synthesised in code. Wins end on a tabla *tihai*. Listen to the previews in `docs/audio-previews/`.
+* **Daily Rasoi Quests** and a **WhatsApp brag card** for wins.
 * **Meri Rasoi:** decorate your own kitchen with the stars you earn. A **Bonus Tadka** finale plays at the end of each win, and every city has its own landmark skyline behind the board.
 
 The full product thinking (audience, psychology, ethics, monetisation, unit economics, analytics) is in **[docs/GAME_DESIGN.md](docs/GAME_DESIGN.md)**.

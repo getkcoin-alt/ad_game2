@@ -2,7 +2,7 @@
 // wipe a player's journey.
 
 const KEY = 'masala-yatra:save';
-const VERSION = 1;
+const VERSION = 2;
 
 export function todayKey(d = new Date()) {
   const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
@@ -18,7 +18,7 @@ export function defaultSave() {
     boosters: { spoon: 2, hand: 1, shuffle: 1 },
     recipes: [],
     seenIntros: [],
-    settings: { sfx: true, music: false, haptics: true, lang: null, reduceMotion: false, analytics: true, personalizedAds: false, breakReminder: true },
+    settings: { sfx: true, music: true, haptics: true, lang: null, reduceMotion: false, analytics: true, personalizedAds: false, breakReminder: true },
     daily: { lastWin: null, streak: 0, best: 0, graceUsedWeek: null },
     gift: { lastClaim: null },
     adCaps: { date: null, counts: {} },
@@ -34,6 +34,8 @@ function migrate(data) {
   const base = defaultSave();
   const merged = { ...base, ...data };
   for (const k of ['boosters', 'settings', 'daily', 'gift', 'adCaps', 'stats', 'decor']) merged[k] = { ...base[k], ...(data[k] || {}) };
+  // v2: the new raga soundtrack is on by default (v1 had a plain drone that defaulted to off).
+  if ((data.v || 1) < 2) merged.settings.music = true;
   merged.v = VERSION;
   return merged;
 }

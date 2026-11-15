@@ -9,6 +9,9 @@ import { analytics } from '../analytics.js';
 import { t, L, getLang } from '../i18n.js';
 import { save, commit, $, $$, openModal, toast, haptic, confetti, animateNumber, hasModal } from '../ui.js';
 import { CITIES, INTRODUCTIONS } from '../engine/content.js';
+import { ensureQuests, questEvent } from './quests.js';
+import { todayKey } from '../storage.js';
+import { shareWin } from '../share.js';
 
 export const BOOSTER_COST = { spoon: 120, hand: 150, shuffle: 80 };
 export const CONTINUE_COST = 250;
@@ -192,6 +195,7 @@ export class GameScreen {
   }
 
   _updateMoves() {
+    sound.setTension(this.session.state === 'playing' && this.session.movesLeft <= 4);
     const el = $('.moves-num', this.root);
     el.textContent = this.session.movesLeft;
     $('.hud-moves', this.root).classList.toggle('low', this.session.movesLeft <= 3);
@@ -289,15 +293,36 @@ export class GameScreen {
     const res = this.session.useTadka();
     if (!res.ok) return;
     analytics.track('tadka_use', { level: this.level.n });
+    this._quest('tadka');
     haptic(40);
     this._updateTadka();
     await this._play(res.phases);
     this._afterTurn();
   }
 
+  _quest(type, amount = 1, extra = {}) {
+    ensureQuests(save, todayKey());
+    const done = questEvent(save, type, amount, extra);
+    if (done.length) {
+      commit();
+      analytics.track('quest_done', { quest: done[0].id });
+      setTimeout(() => { toast(`✅ ${t('questDone')}`, 2200); sound.ding(); }, 600);
+    }
+  }
+
+  _questPhases(phases) {
+    for (const p of phases) {
+      if (p.kind !== 'clear') continue;
+      if (p.created.length) this._quest('special', p.created.length);
+      for (const [color, n] of Object.entries(p.collected)) this._quest('collect', n, { color: Number(color) });
+      if (p.cascade >= 2) this._quest('cascade', p.cascade);
+    }
+  }
+
   async _play(phases) {
     this.busy = true;
     try {
+      this._questPhases(phases);
       await this.view.play(phases);
     } finally {
       this.busy = false;
@@ -396,9 +421,14 @@ export class GameScreen {
     save.coins += coins;
     save.stats.levelsWon++;
     save.winStreak = (save.winStreak || 0) + 1;
+    this._quest('win');
+    if (stars === 3) this._quest('stars3');
+    if (lvl.daily) this._quest('daily');
     commit(true);
     analytics.track('level_win', { level: lvl.n, daily: !!lvl.daily, moves_left: s.movesLeft, stars, attempt: this.attempt, continues: s.continues, duration_s: Math.round((Date.now() - this.startTime) / 1000), best_cascade: s.bestCascade });
-    sound.win();
+    if (lvl.signature) sound.shankh();
+    setTimeout(() => sound.win(), lvl.signature ? 900 : 0);
+    sound.setTension(false);
     haptic(40);
     confetti(this.root, 70);
     this.view.floatText(t('win1'), this.view.W / 2, this.view.H * 0.45, { size: 44, color: '#fff3c4', stroke: '#c2185b', life: 1.4 });
@@ -429,6 +459,7 @@ export class GameScreen {
         ${!lvl.daily && save.winStreak >= 2 ? `<p class="streak-line">🔥 ${t(save.winStreak >= 3 ? 'streakActive' : 'streakLine', { n: save.winStreak })}</p>` : ''}
         <div class="modal-actions col">
           ${canDouble ? `<button class="btn ad" data-a="double">${t('doubleAd')}</button>` : ''}
+          <button class="btn share" data-a="share">📤 ${t('shareWin')}</button>
           <button class="btn primary" data-a="next">${lvl.daily ? t('ok') : t('next')}</button>
           ${lvl.daily ? '' : `<button class="btn ghost" data-a="map">${t('map')}</button>`}
         </div>
@@ -453,6 +484,12 @@ export class GameScreen {
         dbl.disabled = false;
         if (res.reason !== 'closed') toast(t('noAd'));
       }
+    };
+    $('[data-a="share"]', m.el).onclick = async (e) => {
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      await shareWin({ level: lvl, city: CITIES[lvl.cityIndex], stars, dishes: this.session.dishes, decor: save.decor.using });
+      btn.disabled = false;
     };
     const proceed = async (where) => {
       m.close();

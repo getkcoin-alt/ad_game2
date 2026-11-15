@@ -1,7 +1,7 @@
 {
   "name": "masala-yatra",
   "version": "1.0.0",
-  "description": "Masala Yatra \u2014 a cosy cooking match-3 journey across India",
+  "description": "Masala Yatra — a cosy cooking match-3 journey across India",
   "private": true,
   "type": "module",
   "scripts": {
@@ -17,7 +17,9 @@
     "@capacitor/android": "^6.2.3",
     "@capacitor/app": "^6.0.3",
     "@capacitor/core": "^6.2.3",
+    "@capacitor/filesystem": "^6.0.4",
     "@capacitor/haptics": "^6.0.3",
+    "@capacitor/share": "^6.0.4",
     "@capacitor/splash-screen": "^6.0.4"
   },
   "devDependencies": {

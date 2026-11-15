@@ -68,6 +68,7 @@ p { line-height: 1.4; }
 .btn.primary:active { box-shadow: 0 1px 0 #9c0b43, var(--shadow); }
 .btn.ad { background: linear-gradient(180deg, #19b3a3, var(--peacock)); color: #fff; box-shadow: 0 4px 0 #005f56, var(--shadow); }
 .btn.coin { background: linear-gradient(180deg, #ffe082, var(--gold)); color: #5d3a00; box-shadow: 0 4px 0 #b9831a, var(--shadow); }
+.btn.share { background: linear-gradient(180deg, #4fd06a, #25a244); color: #fff; box-shadow: 0 4px 0 #157a2e, var(--shadow); }
 .btn.ghost { background: transparent; box-shadow: none; color: var(--muted); }
 .btn.danger { color: #c62828; }
 .btn.disabled, .btn:disabled { opacity: .55; }
@@ -79,6 +80,7 @@ p { line-height: 1.4; }
 /* ---------- home ---------- */
 #screen-home { overflow-y: auto; align-items: center; padding-bottom: calc(16px + var(--safe-bottom)); }
 #screen-home .topbar { width: 100%; }
+#screen-home > * { flex-shrink: 0; }
 .logo { text-align: center; margin-top: 4px; position: relative; }
 .logo-hi { font-size: 46px; font-weight: 800; line-height: 1; background: linear-gradient(180deg, var(--saffron), var(--rani)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 3px 0 rgba(122,59,18,.18)); }
 .logo-en { font-size: 22px; font-weight: 800; letter-spacing: 4px; color: var(--brown); text-transform: uppercase; }
@@ -96,6 +98,16 @@ p { line-height: 1.4; }
 .card.daily { background: linear-gradient(160deg, #fff3d6, #ffd9a8); }
 .card.daily.done { opacity: .8; }
 .footnote { color: var(--muted); font-size: 13px; font-weight: 600; text-align: center; padding: 0 16px; position: relative; }
+
+/* ---------- now-playing raga chip ---------- */
+.raga-chip { display: inline-flex; align-items: center; gap: 8px; margin: 6px 0 2px; padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,.75); color: var(--brown); font-weight: 700; font-size: 13px; box-shadow: var(--shadow); position: relative; }
+.raga-chip b { font-size: 14px; }
+.raga-chip .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+.raga-chip .eq i { width: 3px; height: 4px; background: var(--rani); border-radius: 2px; }
+.raga-chip.on .eq i { animation: eq 0.9s ease-in-out infinite; }
+.raga-chip.on .eq i:nth-child(2) { animation-delay: .2s; }
+.raga-chip.on .eq i:nth-child(3) { animation-delay: .45s; }
+@keyframes eq { 0%, 100% { height: 4px; } 50% { height: 14px; } }
 
 /* ---------- kitchen hero, chest ---------- */
 .kitchen-hero { position: relative; width: min(340px, calc(100% - 32px)); margin: 8px 0 10px; border-radius: 22px; overflow: hidden; box-shadow: var(--shadow); border: 4px solid #fff; padding: 0; display: block; background: #f3e6d4; }
@@ -118,6 +130,22 @@ p { line-height: 1.4; }
 .chest-anim { font-size: 80px; animation: wiggle .25s ease-in-out 3; }
 .chest-got { font-size: 18px; font-weight: 700; }
 .streak-line { color: #e65100; font-weight: 800; margin: 6px 0 0; }
+
+/* ---------- quests ---------- */
+.quest-dots { display: flex; gap: 5px; }
+.quest-dots i { width: 14px; height: 14px; border-radius: 50%; background: #eedfcc; border: 2px solid #fff; }
+.quest-dots i.done { background: var(--saffron); animation: pulse 1.2s infinite; }
+.quest-dots i.claimed { background: var(--peacock); }
+.quest-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.quest { background: #fff; border-radius: 14px; padding: 8px 10px; }
+.quest.claimed { opacity: .65; }
+.q-txt { display: flex; align-items: center; gap: 6px; }
+.q-txt img { width: 28px; height: 28px; }
+.quest .progress { height: 10px; margin: 6px 0 4px; }
+.q-foot { display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--muted); font-size: 13px; }
+.q-ok { color: var(--peacock); }
+.quest-bonus { margin-top: 10px; padding: 8px 12px; border-radius: 14px; background: #fff3d6; font-weight: 700; color: var(--brown); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.quest-bonus.ready { background: linear-gradient(90deg, #fff3c4, #ffd9a8); animation: pulse 1.6s infinite; }
 
 /* ---------- Meri Rasoi ---------- */
 #screen-rasoi { overflow-y: auto; }

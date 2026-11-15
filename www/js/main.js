@@ -6,6 +6,7 @@ import { CITIES, LEVELS_PER_CITY } from './engine/content.js';
 import { GameScreen, BOOSTER_COST, BOOSTER_ICON } from './game/controller.js';
 import { iconURL } from './render/art.js';
 import { drawKitchen, DECOR, cityBannerURL } from './render/scenes.js';
+import { ensureQuests, questLabel, claimable, ALL_DONE_BONUS } from './game/quests.js';
 import { sound } from './audio.js';
 import { ads } from './ads.js';
 import { analytics } from './analytics.js';
@@ -24,6 +25,7 @@ let levelsThisSession = 0;
 // ---------- navigation ----------
 function show(name) {
   current = name;
+  sound.setScene(name === 'game' ? 'game' : 'menu');
   $$('.screen').forEach((s) => s.classList.toggle('active', s.id === `screen-${name}`));
   window.scrollTo(0, 0);
 }
@@ -47,16 +49,19 @@ function renderHome() {
       <div class="logo-en">Masala Yatra</div>
       <div class="tagline">${t('tagline')}</div>
     </div>
+    ${ragaChip()}
+    <button class="btn primary big play-btn" data-a="play">
+      <span>${done ? t('map') : t('play')}</span>
+      <small>${done ? '' : `${t('levelN', { n: next })} · ${L(city)}`}</small>
+    </button>
     <button class="kitchen-hero" data-a="rasoi" aria-label="${t('rasoi')}">
       <canvas class="kitchen-cv"></canvas>
       <span class="kh-label">🏠 ${t('rasoi')}</span>
       ${affordableDecor() ? `<span class="kh-badge">✨ ${t('decorate')} · ★${starsAvailable()}</span>` : ownedCount() === 0 ? `<span class="kh-hint">${t('rasoiEmpty')}</span>` : ''}
     </button>
+    ${questsHTML()}
     ${chestHTML()}
-    <button class="btn primary big play-btn" data-a="play">
-      <span>${done ? t('map') : t('play')}</span>
-      <small>${done ? '' : `${t('levelN', { n: next })} · ${L(city)}`}</small>
-    </button>
+
     <div class="home-cards">
       <button class="card daily ${dailyDone ? 'done' : ''}" data-a="daily"><span class="c-ico">🍽️</span><b>${t('daily')}</b><small>${dailyDone ? t('dailyDone') : save.daily.streak ? t('streak', { n: save.daily.streak }) : t('dailySub')}</small></button>
       <button class="card" data-a="diary"><span class="c-ico">📖</span><b>${t('diary')}</b><small>${t('diarySub', { n: save.recipes.length, t: CITIES.length })}</small></button>
@@ -65,7 +70,16 @@ function renderHome() {
     </div>
     <p class="footnote">${t('noLives')}</p>`;
   paintKitchen($('.kitchen-cv', el), 320, 190);
+  el.querySelector('[data-a="music"]').onclick = () => {
+    save.settings.music = !save.settings.music;
+    sound.unlock();
+    sound.setMusic(save.settings.music);
+    commit(true);
+    analytics.track('setting_change', { key: 'music', value: save.settings.music, from: 'home_chip' });
+    renderHome();
+  };
   el.querySelector('[data-a="rasoi"]').onclick = () => { sound.tap(); openRasoi(); };
+  el.querySelector('[data-a="quests"]').onclick = () => { sound.tap(); openQuests(); };
   const chestBtn = el.querySelector('[data-a="chest"]');
   if (chestBtn) chestBtn.onclick = () => { sound.tap(); openChest(); };
   el.querySelector('[data-a="play"]').onclick = () => { sound.tap(); done ? openMap() : openPreLevel(getLevel(next)); };
@@ -74,6 +88,16 @@ function renderHome() {
   el.querySelector('[data-a="map"]').onclick = () => { sound.tap(); openMap(); };
   el.querySelector('[data-a="shelf"]').onclick = () => { sound.tap(); openShelf().then(renderHome); };
   el.querySelector('[data-a="settings"]').onclick = () => { sound.tap(); openSettings(); };
+}
+
+function ragaChip() {
+  const r = sound.ragaInfo();
+  const lang = getLang();
+  return `<button class="raga-chip ${save.settings.music ? 'on' : ''}" data-a="music" aria-label="${t('music')}">
+    <span class="eq"><i></i><i></i><i></i></span>
+    <span>${t('nowPlaying', { r: lang === 'hi' ? r.hi : r.en, m: lang === 'hi' ? r.mood.hi : r.mood.en })}</span>
+    <b>${save.settings.music ? '🔊' : '🔇'}</b>
+  </button>`;
 }
 
 // ---------- Meri Rasoi (kitchen decoration with stars) ----------
@@ -150,6 +174,69 @@ function openRasoi() {
   };
   render();
   analytics.track('rasoi_open', { owned: ownedCount(), stars: starsAvailable() });
+}
+
+// ---------- Daily Rasoi Quests ----------
+function questsHTML() {
+  const q = ensureQuests(save, todayKey());
+  const done = q.list.filter((x) => x.progress >= x.target).length;
+  const ready = claimable(save) + (done === 3 && !q.bonusClaimed ? 1 : 0);
+  return `<button class="chest-bar quest-bar ${ready ? 'ready' : ''}" data-a="quests">
+    <span class="chest-ico">📋</span>
+    <span class="chest-txt"><b>${t('quests')}</b><small>${ready ? t('questClaim') : t('questsSub')}</small></span>
+    <span class="quest-dots">${q.list.map((x) => `<i class="${x.claimed ? 'claimed' : x.progress >= x.target ? 'done' : ''}"></i>`).join('')}</span>
+  </button>`;
+}
+
+function openQuests() {
+  const lang = getLang();
+  const render = () => {
+    const q = ensureQuests(save, todayKey());
+    const allDone = q.list.every((x) => x.claimed);
+    return `
+      <h2>📋 ${t('quests')}</h2>
+      <p class="fine">${t('questsNote')}</p>
+      <div class="quest-list">${q.list.map((x, i) => {
+        const pct = Math.min(100, (x.progress / x.target) * 100);
+        const ing = x.color != null ? `<img src="${iconURL(String(x.color), 48)}" alt="">` : '';
+        return `<div class="quest ${x.claimed ? 'claimed' : ''}">
+          <div class="q-txt">${ing}<b>${questLabel(x, lang)}</b></div>
+          <div class="progress"><i style="width:${pct}%"></i></div>
+          <div class="q-foot"><span>${x.progress}/${x.target}</span>
+            ${x.claimed ? `<span class="q-ok">✓ ${t('owned')}</span>` : x.progress >= x.target ? `<button class="btn small coin" data-claim="${i}">${t('claim')} 🪙 ${x.reward}</button>` : `<span>🪙 ${x.reward}</span>`}
+          </div>
+        </div>`;
+      }).join('')}</div>
+      <div class="quest-bonus ${allDone && !q.bonusClaimed ? 'ready' : ''}">🎁 ${t('questBonus', { c: ALL_DONE_BONUS.coins })}
+        ${allDone && !q.bonusClaimed ? `<button class="btn small primary" data-a="bonus">${t('claim')}</button>` : q.bonusClaimed ? ' ✓' : ''}</div>
+      <div class="modal-actions"><button class="btn primary" data-a="close">${t('close')}</button></div>`;
+  };
+  const m = openModal(render(), { onClose: () => renderHome() });
+  const bind = () => {
+    $('[data-a="close"]', m.el).onclick = () => m.close();
+    $$('[data-claim]', m.el).forEach((b) => b.onclick = () => {
+      const quest = save.quests.list[Number(b.dataset.claim)];
+      quest.claimed = true;
+      save.coins += quest.reward;
+      commit(true);
+      sound.coin();
+      analytics.track('quest_claim', { quest: quest.id, reward: quest.reward });
+      m.el.innerHTML = render(); bind();
+      confetti(m.el, 25);
+    });
+    const bonus = $('[data-a="bonus"]', m.el);
+    if (bonus) bonus.onclick = () => {
+      save.quests.bonusClaimed = true;
+      save.coins += ALL_DONE_BONUS.coins;
+      save.boosters[ALL_DONE_BONUS.booster]++;
+      commit(true);
+      sound.win();
+      analytics.track('quest_bonus', {});
+      m.el.innerHTML = render(); bind();
+      confetti(m.el, 50);
+    };
+  };
+  bind();
 }
 
 // ---------- Masala Box (fixed reward every 15 stars — no randomness) ----------
@@ -601,6 +688,7 @@ async function boot() {
       analytics.track('session_end', { duration_s: Math.round(activeMs / 1000), levels_played: levelsThisSession });
     } else {
       lastTick = Date.now();
+      sound.refreshRaga();
       sound.resume();
     }
   });

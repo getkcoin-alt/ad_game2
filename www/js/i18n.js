@@ -2,6 +2,9 @@
 
 const STR = {
   en: {
+    quests: 'Rasoi Quests', questsSub: '3 small goals for today', questClaim: 'Reward ready — claim it!', questDone: 'Quest done! Claim it on the home screen', questsNote: 'New quests every day. Skipping a day costs nothing.', questBonus: 'Finish all 3: 🪙 {c} + 🥄 Chamach',
+    shareWin: 'Share', shareText: 'I just cooked {dish} in Masala Yatra! ★{s} — your turn!',
+    nowPlaying: 'Raag {r} · {m} music', ragaHelp: 'The soundtrack follows the time of day, like Indian classical music.',
     bonusTadka: 'Bonus Tadka!', blessing: '🔥 {n} wins in a row — Dadi’s blessing: a free Belan!', dadiHelp: 'Dadi gives you +3 moves for this try 💛',
     streakLine: '{n} wins in a row! Win 3 for Dadi’s blessing.', streakActive: '{n} wins in a row — Dadi’s blessing is on your next level!',
     rasoi: 'Meri Rasoi', rasoiSub: 'Decorate your kitchen with ★', decorate: 'Decorate', starsToSpend: '★ {n} to spend', using: 'Using', owned: 'Owned', apply: 'Use', needStars: 'Earn more ★ — replay levels for 3 stars!',
@@ -49,6 +52,9 @@ const STR = {
     allDone: 'You’ve completed the Yatra! New cities are being cooked up — check back soon. Meanwhile, replay levels for 3 stars and enjoy the Daily Thali.',
   },
   hi: {
+    quests: 'रसोई क्वेस्ट', questsSub: 'आज के 3 छोटे लक्ष्य', questClaim: 'इनाम तैयार — लें!', questDone: 'क्वेस्ट पूरा! होम पर इनाम लें', questsNote: 'हर दिन नए क्वेस्ट। कोई दिन छूटे तो कोई नुकसान नहीं।', questBonus: 'तीनों पूरे करें: 🪙 {c} + 🥄 चम्मच',
+    shareWin: 'शेयर करें', shareText: 'मैंने मसाला यात्रा में {dish} बनाया! ★{s} — अब आपकी बारी!',
+    nowPlaying: 'राग {r} · {m} का संगीत', ragaHelp: 'संगीत दिन के समय के साथ बदलता है, शास्त्रीय परंपरा की तरह।',
     bonusTadka: 'बोनस तड़का!', blessing: '🔥 लगातार {n} जीत — दादी का आशीर्वाद: मुफ़्त बेलन!', dadiHelp: 'इस बार दादी की ओर से +3 चालें 💛',
     streakLine: 'लगातार {n} जीत! 3 जीत पर दादी का आशीर्वाद।', streakActive: 'लगातार {n} जीत — अगले लेवल पर दादी का आशीर्वाद!',
     rasoi: 'मेरी रसोई', rasoiSub: '★ से अपनी रसोई सजाएं', decorate: 'सजाएं', starsToSpend: 'ख़र्च करने को ★ {n}', using: 'लगा है', owned: 'आपका', apply: 'लगाएं', needStars: 'और ★ कमाएं — 3 सितारों के लिए लेवल दोबारा खेलें!',
