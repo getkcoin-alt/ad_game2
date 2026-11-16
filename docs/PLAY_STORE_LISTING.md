@@ -7,7 +7,7 @@ Copy each field straight into Play Console. All text fits Play's limits. Graphic
 | Field | Value |
 |---|---|
 | **App name** (≤30) | `Chatpata: Cooking Match 3` |
-| **Package name** | `in.scriza.chatpata` (permanent once uploaded) |
+| **Package name** | `in.scriza.masalayatra` (locked by Play Console from the first upload; invisible to players, who only see "Chatpata") |
 | **Version** | `1.3.0` (versionCode `3`) · min Android 7.0 (API 24) · target Android 16 (API 36) |
 | **App or game** | Game |
 | **Free or paid** | Free |

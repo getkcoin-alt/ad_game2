@@ -7,7 +7,7 @@ import { tileSprite } from './render/art.js';
 import { analytics } from './analytics.js';
 import { t, L, getLang } from './i18n.js';
 
-const PLAY_URL = 'https://play.google.com/store/apps/details?id=in.scriza.chatpata';
+const PLAY_URL = 'https://play.google.com/store/apps/details?id=in.scriza.masalayatra';
 
 function shareUrl() {
   if (window.Capacitor?.isNativePlatform?.()) return PLAY_URL;

@@ -11,7 +11,7 @@ android {
     namespace "in.scriza.chatpata"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "in.scriza.chatpata"
+        applicationId "in.scriza.masalayatra"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
