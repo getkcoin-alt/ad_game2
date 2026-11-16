@@ -8,7 +8,7 @@
 
 export const AD_CONFIG = {
   // Your AdMob / AdSense publisher id, e.g. "pub-1234567890123456" (used for ads.txt / app-ads.txt).
-  publisherId: '',
+  publisherId: 'pub-8143994955949819',
 
   admob: {
     // Rewarded ad unit for Android, e.g. "ca-app-pub-1234567890123456/1234567890".
@@ -22,7 +22,7 @@ export const AD_CONFIG = {
 
   adsense: {
     // AdSense client for the web build (H5 Games Ads / Ad Placement API), e.g. "ca-pub-1234567890123456".
-    client: '',
+    client: 'ca-pub-8143994955949819',
     // Shows Google test ads on the web while true — set false once AdSense approves the site for H5 games.
     testMode: true,
   },

@@ -1,4 +1,4 @@
-package in.masalayatra.game;
+package in.scriza.masalayatra;
 
 import com.getcapacitor.BridgeActivity;
 

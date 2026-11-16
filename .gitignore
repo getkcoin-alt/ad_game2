@@ -5,3 +5,9 @@ test-results/
 android/app/build/
 android/.gradle/
 dist/
+
+# release signing secrets — never commit
+android/keystore.properties
+*.jks
+*.keystore
+android/keys/

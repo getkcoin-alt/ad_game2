@@ -188,7 +188,9 @@ class Ads {
     const plugin = cap?.Plugins?.AdMob;
     const native = cap?.isNativePlatform?.() && plugin;
     try {
-      if (native) {
+      if (window.__FORCE_MOCK_ADS) {
+        this.provider = new MockProvider(); // automated tests only
+      } else if (native) {
         const p = new AdMobProvider(plugin, cap.getPlatform());
         await p.init({ personalized: save.settings.personalizedAds, userId: analytics.userId });
         this.provider = p;

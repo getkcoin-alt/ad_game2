@@ -582,7 +582,7 @@ function openSettings() {
     </div>
     <h4>${t('privacy')}</h4>
     <div class="toggles">${tg('analytics', t('analyticsToggle'))}${tg('personalizedAds', t('personalAds'))}</div>
-    <p class="fine">${t('privacyBody')}</p>
+    <p class="fine">${t('privacyBody')} <a href="https://adgame2.vercel.app/privacy.html" target="_blank" rel="noopener">${t('privacyPolicy')}</a></p>
     <details class="debug"><summary>${t('events')}</summary><pre>${analytics.recent.slice(-15).reverse().map((e) => `${new Date(e.ts).toLocaleTimeString()} ${e.name} ${JSON.stringify(e.params)}`).join('\n') || '—'}</pre></details>
     <p class="fine">${t('about')}</p>
     <div class="modal-actions">
@@ -640,7 +640,7 @@ function welcome() {
         <div class="welcome center">
           <h2>${t('welcome')}</h2>
           <p>${t('welcomeBody')}</p>
-          <p class="fine">${t('privacyBody')}</p>
+          <p class="fine">${t('privacyBody')} <a href="https://adgame2.vercel.app/privacy.html" target="_blank" rel="noopener">${t('privacyPolicy')}</a></p>
           <div class="toggles">
             <label class="toggle"><span>${t('analyticsToggle')}</span><input type="checkbox" data-k="analytics" checked></label>
             <label class="toggle"><span>${t('personalAds')}</span><input type="checkbox" data-k="personalizedAds"></label>

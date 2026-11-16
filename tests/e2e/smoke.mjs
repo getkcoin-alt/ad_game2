@@ -18,7 +18,7 @@ p.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
 const shot = async (name) => { if (OUT) await p.screenshot({ path: `${OUT}/${name}.png` }); };
 const wait = (ms) => p.waitForTimeout(ms);
 
-await p.addInitScript(() => { window.__FAST_ADS = true; });
+await p.addInitScript(() => { window.__FAST_ADS = true; window.__FORCE_MOCK_ADS = true; });
 await p.goto(URL);
 await wait(800);
 step('onboarding');

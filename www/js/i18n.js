@@ -2,6 +2,7 @@
 
 const STR = {
   en: {
+    privacyPolicy: 'Privacy policy',
     quests: 'Rasoi Quests', questsSub: '3 small goals for today', questClaim: 'Reward ready — claim it!', questDone: 'Quest done! Claim it on the home screen', questsNote: 'New quests every day. Skipping a day costs nothing.', questBonus: 'Finish all 3: 🪙 {c} + 🥄 Chamach',
     shareWin: 'Share', shareText: 'I just cooked {dish} in Masala Yatra! ★{s} — your turn!',
     nowPlaying: 'Raag {r} · {m} music', ragaHelp: 'The soundtrack follows the time of day, like Indian classical music.',
@@ -52,6 +53,7 @@ const STR = {
     allDone: 'You’ve completed the Yatra! New cities are being cooked up — check back soon. Meanwhile, replay levels for 3 stars and enjoy the Daily Thali.',
   },
   hi: {
+    privacyPolicy: 'गोपनीयता नीति',
     quests: 'रसोई क्वेस्ट', questsSub: 'आज के 3 छोटे लक्ष्य', questClaim: 'इनाम तैयार — लें!', questDone: 'क्वेस्ट पूरा! होम पर इनाम लें', questsNote: 'हर दिन नए क्वेस्ट। कोई दिन छूटे तो कोई नुकसान नहीं।', questBonus: 'तीनों पूरे करें: 🪙 {c} + 🥄 चम्मच',
     shareWin: 'शेयर करें', shareText: 'मैंने मसाला यात्रा में {dish} बनाया! ★{s} — अब आपकी बारी!',
     nowPlaying: 'राग {r} · {m} का संगीत', ragaHelp: 'संगीत दिन के समय के साथ बदलता है, शास्त्रीय परंपरा की तरह।',
