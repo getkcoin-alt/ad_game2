@@ -57,7 +57,7 @@ cd android && ./gradlew assembleDebug
 
 The APK is written to `android/app/build/outputs/apk/debug/app-debug.apk`. Or open the `android/` folder in Android Studio and press Run.
 
-The Gradle wrapper is set to 8.14 and the Android Gradle Plugin to 8.7.3, so the project builds on JDK 17–21.
+The Gradle wrapper is set to 8.14 and the Android Gradle Plugin to 8.11, targeting Android 16 (API 36) as Google Play now requires. It builds on JDK 17–21 and needs SDK platform 36.
 
 ### Before releasing to Play
 
