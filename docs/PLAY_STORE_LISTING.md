@@ -8,7 +8,7 @@ Copy each field straight into Play Console. All text fits Play's limits. Graphic
 |---|---|
 | **App name** (≤30) | `Chatpata: Cooking Match 3` |
 | **Package name** | `in.scriza.chatpata` (permanent once uploaded) |
-| **Version** | `1.3.0` (versionCode `2`) · target API 36 (Android 16) |
+| **Version** | `1.3.0` (versionCode `3`) · min Android 7.0 (API 24) · target Android 16 (API 36) |
 | **App or game** | Game |
 | **Free or paid** | Free |
 | **Category** | Puzzle |
@@ -139,7 +139,7 @@ AdMob looks for `app-ads.txt` on the **website in the store listing**, so use `h
 
 1. **Create the app** in Play Console: name as above, Game, Free.
 2. **App signing:** accept *Play App Signing* (Google manages the app signing key). The upload key in `android/keys/` is **your** key: back it up (see below).
-3. **Internal testing:** upload `dist/chatpata-1.3.0-v2-internal.aab` and add your own email as a tester. This build uses Google **test** ads.
+3. **Internal testing:** upload `dist/chatpata-1.3.0-v3.aab` and add your own email as a tester. This build uses Google **test** ads.
 4. **AdMob:** create the app (Android, link it to the Play listing once it exists) and a *Rewarded* unit, then:
    ```bash
    npm run ads:setup -- --admob-app ca-app-pub-8143994955949819~XXXXXXXXXX --rewarded ca-app-pub-8143994955949819/YYYYYYYYYY
