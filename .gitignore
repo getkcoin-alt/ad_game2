@@ -11,3 +11,4 @@ android/keystore.properties
 *.jks
 *.keystore
 android/keys/
+serve.log

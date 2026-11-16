@@ -28,8 +28,8 @@ const fontCss = `@font-face{font-family:B;src:url(${f64('baloo-2-devanagari-800-
   }
   const splash = (w, h) => `<div style="width:${w}px;height:${h}px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#ff8a00,#e0115f);font-family:B;color:#fff;text-align:center">
     ${svg.replace('<svg ', `<svg width="${Math.round(Math.min(w, h) * 0.32)}" height="${Math.round(Math.min(w, h) * 0.32)}" `)}
-    <div style="font-size:${Math.round(Math.min(w, h) * 0.11)}px;line-height:1.1;margin-top:${Math.round(h * 0.02)}px">मसाला यात्रा</div>
-    <div style="font-size:${Math.round(Math.min(w, h) * 0.05)}px;letter-spacing:.2em;opacity:.9">MASALA YATRA</div></div>`;
+    <div style="font-size:${Math.round(Math.min(w, h) * 0.11)}px;line-height:1.1;margin-top:${Math.round(h * 0.02)}px">चटपटा</div>
+    <div style="font-size:${Math.round(Math.min(w, h) * 0.05)}px;letter-spacing:.2em;opacity:.9">CHATPATA</div></div>`;
   const ports = { mdpi: [320, 480], hdpi: [480, 800], xhdpi: [720, 1280], xxhdpi: [960, 1600], xxxhdpi: [1280, 1920] };
   for (const [d, [w, h]] of Object.entries(ports)) {
     await render(splash(w, h), w, h, `${res}/drawable-port-${d}/splash.png`);

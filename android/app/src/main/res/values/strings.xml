@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Masala Yatra</string>
-    <string name="title_activity_main">Masala Yatra</string>
-    <string name="package_name">in.scriza.masalayatra</string>
-    <string name="custom_url_scheme">in.scriza.masalayatra</string>
+    <string name="app_name">Chatpata</string>
+    <string name="title_activity_main">Chatpata</string>
+    <string name="package_name">in.scriza.chatpata</string>
+    <string name="custom_url_scheme">in.scriza.chatpata</string>
 </resources>

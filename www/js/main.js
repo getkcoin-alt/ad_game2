@@ -45,8 +45,8 @@ function renderHome() {
   el.innerHTML = `
     <div class="topbar">${coinsHTML()}<div class="star-total">★ ${totalStars()}</div><button class="icon-btn" data-a="settings" aria-label="${t('settings')}">⚙️</button></div>
     <div class="logo">
-      <div class="logo-hi">मसाला यात्रा</div>
-      <div class="logo-en">Masala Yatra</div>
+      <div class="logo-hi">चटपटा</div>
+      <div class="logo-en">Chatpata</div>
       <div class="tagline">${t('tagline')}</div>
     </div>
     ${ragaChip()}
@@ -408,7 +408,7 @@ function openRecipe(city) {
       </div>`, { cls: 'tall', onClose: resolve });
     $('[data-a="close"]', m.el).onclick = () => m.close();
     $('[data-a="share"]', m.el).onclick = async () => {
-      const text = `${r.en} (${r.hi})\n\n${t('ingredients')}:\n- ${r.ingredients.join('\n- ')}\n\n${t('method')}:\n${r.steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\n${r.tip.en}\n\n— from Masala Yatra 🍛`;
+      const text = `${r.en} (${r.hi})\n\n${t('ingredients')}:\n- ${r.ingredients.join('\n- ')}\n\n${t('method')}:\n${r.steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\n${r.tip.en}\n\n— from Chatpata 🍛`;
       analytics.track('recipe_share', { city: city.id });
       try {
         if (navigator.share) await navigator.share({ title: r.en, text });

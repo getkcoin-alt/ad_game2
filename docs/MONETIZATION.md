@@ -1,6 +1,6 @@
 # Earning money with ads — setup guide
 
-Masala Yatra earns from **rewarded ads only**. The player chooses to watch a short ad in exchange for something useful:
+Chatpata earns from **rewarded ads only**. The player chooses to watch a short ad in exchange for something useful:
 
 | Placement | Reward | Daily cap |
 |---|---|---|
@@ -27,7 +27,7 @@ The code is fully integrated. **All you need is your own account IDs**, written 
 2. **Payments → Payment info:** enter your legal name and address exactly as on your bank account, your PAN/tax details when asked, and a bank account for payment.
    * Google mails a **PIN** to your address once your earnings pass the verification threshold; enter it in AdMob.
    * You're paid monthly once your balance passes the payment threshold shown in your account.
-3. **Apps → Add app → Android.** Choose "not yet published" if the game isn't on Play yet, and name it *Masala Yatra*. You get an **App ID** like `ca-app-pub-1234567890123456~1234567890`.
+3. **Apps → Add app → Android.** Choose "not yet published" if the game isn't on Play yet, and name it *Chatpata*. You get an **App ID** like `ca-app-pub-1234567890123456~1234567890`.
 4. **Ad units → Add ad unit → Rewarded.** Name it `rewarded_main`, with reward amount 1 and item "reward" (the game decides the actual reward). You get an **Ad unit ID** like `ca-app-pub-1234567890123456/1234567890`.
 5. **Privacy & messaging → GDPR / US states:** create the consent messages. The game already shows Google's consent form wherever it's legally required.
 
@@ -84,7 +84,7 @@ AdMob checks `https://<your-developer-website>/app-ads.txt`. The game's `www/` f
 
 1. Deploy (push to `main`), then confirm `https://<your-site>/app-ads.txt` shows your `google.com, pub-…` line.
 2. In Play Console → **Store settings → Store listing contact details**, set **Website** to that same site.
-3. AdMob → Apps → *Masala Yatra* → **app-ads.txt** tab. Verification takes up to 24 hours.
+3. AdMob → Apps → *Chatpata* → **app-ads.txt** tab. Verification takes up to 24 hours.
 
 ## 6. Earn more: mediation (after launch)
 

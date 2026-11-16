@@ -82,7 +82,7 @@ p { line-height: 1.4; }
 #screen-home .topbar { width: 100%; }
 #screen-home > * { flex-shrink: 0; }
 .logo { text-align: center; margin-top: 4px; position: relative; }
-.logo-hi { font-size: 46px; font-weight: 800; line-height: 1; background: linear-gradient(180deg, var(--saffron), var(--rani)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 3px 0 rgba(122,59,18,.18)); }
+.logo-hi { font-size: 58px; font-weight: 800; line-height: 1; background: linear-gradient(180deg, var(--saffron), var(--rani)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 3px 0 rgba(122,59,18,.18)); }
 .logo-en { font-size: 22px; font-weight: 800; letter-spacing: 4px; color: var(--brown); text-transform: uppercase; }
 .tagline { color: var(--muted); font-weight: 600; }
 .hero { width: min(320px, 86vw); height: auto; aspect-ratio: 320 / 220; margin: 4px 0 8px; animation: float 4s ease-in-out infinite; }

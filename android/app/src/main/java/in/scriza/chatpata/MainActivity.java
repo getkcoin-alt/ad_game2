@@ -1,4 +1,4 @@
-package in.scriza.masalayatra;
+package in.scriza.chatpata;
 
 import com.getcapacitor.BridgeActivity;
 

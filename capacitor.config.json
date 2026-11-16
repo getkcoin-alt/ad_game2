@@ -1,6 +1,6 @@
 {
-  "appId": "in.scriza.masalayatra",
-  "appName": "Masala Yatra",
+  "appId": "in.scriza.chatpata",
+  "appName": "Chatpata",
   "webDir": "www",
   "android": {
     "backgroundColor": "#ff8a00",

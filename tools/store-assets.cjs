@@ -125,8 +125,8 @@ async function seed(page, lang, extra = {}) {
     const icon = new Image(); icon.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg))); await icon.decode();
     ctx.drawImage(icon, 56, 150, 200, 200);
     ctx.fillStyle = '#fff'; ctx.textBaseline = 'alphabetic'; ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 10;
-    ctx.font = '800 96px B'; ctx.fillText('मसाला यात्रा', 290, 250);
-    ctx.font = '800 50px B'; ctx.fillText('Masala Yatra', 294, 318);
+    ctx.font = '800 96px B'; ctx.fillText('चटपटा', 290, 250);
+    ctx.font = '800 50px B'; ctx.fillText('Chatpata', 294, 318);
     ctx.font = '800 30px B'; ctx.fillStyle = '#fff3d6'; ctx.fillText('Cook · Match · Travel India', 296, 370);
     ctx.shadowBlur = 0;
     [[0, 785, 85], [2, 785, 335], [5, 905, 80], [1, 905, 210], [3, 905, 340]].forEach(([c, x, y]) => ctx.drawImage(tileSprite(c, null, 192), x, y, 110, 110));

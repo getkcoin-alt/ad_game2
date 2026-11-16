@@ -96,7 +96,7 @@ const get = (key) => (now.match(new RegExp(`${key}:\\s*('([^']*)'|true|false)`))
 const gpText = existsSync(path('android/gradle.properties')) ? readFileSync(path('android/gradle.properties'), 'utf8') : '';
 const gradleApp = (gpText.match(/^ADMOB_APP_ID=(.*)$/m) || [])[1];
 const ok = (b) => (b ? '✓' : '·');
-console.log('\nMasala Yatra ad configuration');
+console.log('\nChatpata ad configuration');
 console.log(` ${ok(get('publisherId'))} publisher id        ${get('publisherId') || '(not set)'}`);
 console.log(` ${ok(gradleApp)} AdMob app id (Android) ${gradleApp || '(not set → Google TEST app id)'}`);
 console.log(` ${ok(get('rewardedAndroid'))} rewarded unit Android ${get('rewardedAndroid') || '(not set → TEST ads)'}`);

@@ -1,6 +1,6 @@
 {
-  "name": "Masala Yatra",
-  "short_name": "Masala Yatra",
+  "name": "Chatpata",
+  "short_name": "Chatpata",
   "description": "A cosy cooking match-3 journey across India.",
   "start_url": "./index.html",
   "display": "standalone",

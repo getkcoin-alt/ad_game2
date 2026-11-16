@@ -14,4 +14,4 @@ createServer(async (req, res) => {
     res.writeHead(200, { 'content-type': types[extname(file)] || 'application/octet-stream', 'cache-control': 'no-cache' });
     res.end(body);
   } catch { res.writeHead(404); res.end('not found'); }
-}).listen(port, () => console.log(`Masala Yatra → http://localhost:${port}`));
+}).listen(port, () => console.log(`Chatpata → http://localhost:${port}`));

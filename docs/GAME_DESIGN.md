@@ -1,4 +1,4 @@
-# Masala Yatra — Game Design & Product Document
+# Chatpata — Game Design & Product Document
 
 > A cosy cooking match-3 journey across India. Cook real dishes for people you care about,
 > travel city to city, and collect **real family recipes** you can actually cook tonight.

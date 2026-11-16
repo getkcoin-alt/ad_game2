@@ -7,7 +7,7 @@ import { tileSprite } from './render/art.js';
 import { analytics } from './analytics.js';
 import { t, L, getLang } from './i18n.js';
 
-const PLAY_URL = 'https://play.google.com/store/apps/details?id=in.scriza.masalayatra';
+const PLAY_URL = 'https://play.google.com/store/apps/details?id=in.scriza.chatpata';
 
 function shareUrl() {
   if (window.Capacitor?.isNativePlatform?.()) return PLAY_URL;
@@ -70,8 +70,8 @@ export async function makeWinCard({ level, city, stars, dishes, decor }) {
   ctx.textAlign = 'center';
   ctx.fillStyle = '#fff'; ctx.font = font(800, 88);
   ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 12;
-  ctx.fillText('मसाला यात्रा', W / 2, 1185);
-  ctx.font = font(700, 40); ctx.fillText('Masala Yatra · ' + (getLang() === 'hi' ? 'मुफ़्त खेलें' : 'Play free'), W / 2, 1265);
+  ctx.fillText('चटपटा', W / 2, 1185);
+  ctx.font = font(700, 40); ctx.fillText('Chatpata · ' + (getLang() === 'hi' ? 'मुफ़्त खेलें' : 'Play free'), W / 2, 1265);
   ctx.shadowColor = 'transparent';
   return cv;
 }
@@ -87,17 +87,17 @@ export async function shareWin(info) {
   try {
     if (cap?.isNativePlatform?.() && Share && Filesystem) {
       const base64 = cv.toDataURL('image/png').split(',')[1];
-      const file = await Filesystem.writeFile({ path: `masala-yatra-${Date.now()}.png`, data: base64, directory: 'CACHE' });
-      await Share.share({ title: 'Masala Yatra', text, files: [file.uri], dialogTitle: t('shareWin') });
+      const file = await Filesystem.writeFile({ path: `chatpata-${Date.now()}.png`, data: base64, directory: 'CACHE' });
+      await Share.share({ title: 'Chatpata', text, files: [file.uri], dialogTitle: t('shareWin') });
       return 'shared';
     }
     const blob = await new Promise((r) => cv.toBlob(r, 'image/png'));
-    const file = new File([blob], 'masala-yatra.png', { type: 'image/png' });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text, title: 'Masala Yatra' }); return 'shared'; }
-    if (navigator.share) { await navigator.share({ text, title: 'Masala Yatra' }); return 'shared'; }
+    const file = new File([blob], 'chatpata.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text, title: 'Chatpata' }); return 'shared'; }
+    if (navigator.share) { await navigator.share({ text, title: 'Chatpata' }); return 'shared'; }
     // desktop fallback: download the image
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'masala-yatra.png'; a.click();
+    a.href = URL.createObjectURL(blob); a.download = 'chatpata.png'; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
     return 'shared';
   } catch {

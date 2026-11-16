@@ -1,7 +1,7 @@
 {
-  "name": "masala-yatra",
+  "name": "chatpata",
   "version": "1.0.0",
-  "description": "Masala Yatra — a cosy cooking match-3 journey across India",
+  "description": "Chatpata — a cosy cooking match-3 journey across India",
   "private": true,
   "type": "module",
   "scripts": {

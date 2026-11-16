@@ -1,4 +1,4 @@
-// Masala Yatra — pure board engine (no DOM). Fully deterministic given an RNG.
+// Chatpata — pure board engine (no DOM). Fully deterministic given an RNG.
 //
 // Layout legend (one string per row):
 //   '.' playable cell with a random ingredient

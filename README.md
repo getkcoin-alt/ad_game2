@@ -1,4 +1,4 @@
-# Masala Yatra · मसाला यात्रा
+# Chatpata · चटपटा
 
 A cosy, Android-first cooking match-3 for Indian players. You cook dishes for guests on a food trip across 10 Indian cities, and each city you finish unlocks a **real recipe** you can cook at home.
 

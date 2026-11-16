@@ -1,4 +1,4 @@
-# Google Play listing: Masala Yatra
+# Google Play listing: Chatpata
 
 Copy each field straight into Play Console. All text fits Play's limits. Graphics are in `store/` and can be regenerated with `node tools/store-assets.cjs`.
 
@@ -6,8 +6,8 @@ Copy each field straight into Play Console. All text fits Play's limits. Graphic
 
 | Field | Value |
 |---|---|
-| **App name** (≤30) | `Masala Yatra: Cooking Match 3` |
-| **Package name** | `in.scriza.masalayatra` (permanent once uploaded) |
+| **App name** (≤30) | `Chatpata: Cooking Match 3` |
+| **Package name** | `in.scriza.chatpata` (permanent once uploaded) |
 | **Version** | `1.3.0` (versionCode `1`) |
 | **App or game** | Game |
 | **Free or paid** | Free |
@@ -29,7 +29,7 @@ Copy each field straight into Play Console. All text fits Play's limits. Graphic
 ```
 Cook your way across India! 🍛
 
-Masala Yatra is a cosy match-3 cooking puzzle. Guests order their favourite dishes — Vada Pav, Dhokla, Chole, Sambar, Biryani — and you match chillies, lemons, mint, onions, garlic and kulhad chai to cook them.
+Chatpata is a cosy match-3 cooking puzzle. Guests order their favourite dishes — Vada Pav, Dhokla, Chole, Sambar, Biryani — and you match chillies, lemons, mint, onions, garlic and kulhad chai to cook them.
 
 🗺️ A JOURNEY ACROSS INDIA
 Travel from Mumbai to Ahmedabad, Jaipur, Delhi, Amritsar, Kolkata, Hyderabad, Chennai, Goa and Kerala. Every city has its own skyline, dishes and a signature level.
@@ -61,7 +61,7 @@ Ads are optional: watch one only when you want a reward, like +5 moves.
 
 ## Store listing — Hindi (hi-IN)
 
-**App name**: `मसाला यात्रा: कुकिंग मैच 3`
+**App name**: `चटपटा: कुकिंग मैच 3`
 
 **Short description** (65/80)
 > भारतीय पकवान बनाएं, मसाले मिलाएं और 10 शहरों की असली रेसिपी पाएं!
@@ -70,7 +70,7 @@ Ads are optional: watch one only when you want a reward, like +5 moves.
 ```
 पूरे भारत की स्वादिष्ट रसोई यात्रा! 🍛
 
-मसाला यात्रा एक आरामदायक मैच-3 कुकिंग पज़ल है। मेहमान अपने पसंदीदा पकवान मांगते हैं — वड़ा पाव, ढोकला, छोले, सांबर, बिरयानी — और आप मिर्ची, नींबू, पुदीना, प्याज़, लहसुन और कुल्हड़ चाय मिलाकर उन्हें बनाते हैं।
+चटपटा एक आरामदायक मैच-3 कुकिंग पज़ल है। मेहमान अपने पसंदीदा पकवान मांगते हैं — वड़ा पाव, ढोकला, छोले, सांबर, बिरयानी — और आप मिर्ची, नींबू, पुदीना, प्याज़, लहसुन और कुल्हड़ चाय मिलाकर उन्हें बनाते हैं।
 
 🗺️ भारत की यात्रा
 मुंबई से अहमदाबाद, जयपुर, दिल्ली, अमृतसर, कोलकाता, हैदराबाद, चेन्नई, गोवा और केरल तक। हर शहर की अपनी झलक, अपने पकवान और एक ख़ास लेवल।
@@ -139,7 +139,7 @@ AdMob looks for `app-ads.txt` on the **website in the store listing**, so use `h
 
 1. **Create the app** in Play Console: name as above, Game, Free.
 2. **App signing:** accept *Play App Signing* (Google manages the app signing key). The upload key in `android/keys/` is **your** key: back it up (see below).
-3. **Internal testing:** upload `dist/masala-yatra-1.3.0-internal.aab` and add your own email as a tester. This build uses Google **test** ads.
+3. **Internal testing:** upload `dist/chatpata-1.3.0-internal.aab` and add your own email as a tester. This build uses Google **test** ads.
 4. **AdMob:** create the app (Android, link it to the Play listing once it exists) and a *Rewarded* unit, then:
    ```bash
    npm run ads:setup -- --admob-app ca-app-pub-8143994955949819~XXXXXXXXXX --rewarded ca-app-pub-8143994955949819/YYYYYYYYYY
@@ -154,7 +154,7 @@ AdMob looks for `app-ads.txt` on the **website in the store listing**, so use `h
 
 ## Upload key backup: important
 
-* `android/keys/masala-yatra-upload.jks` and `android/keystore.properties` hold the key and its password.
+* `android/keys/chatpata-upload.jks` and `android/keystore.properties` hold the key and its password.
 * They're **git-ignored**, deliberately never committed, and live only in this build container until you save them.
 * Store both somewhere safe, such as a password manager.
 * With Play App Signing, a lost upload key can be reset through Play support. Without a backup, though, you can't ship updates until that reset is done.

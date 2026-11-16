@@ -8,10 +8,10 @@ def keystoreFile = rootProject.file('keystore.properties')
 if (keystoreFile.exists()) keystoreFile.withInputStream { keystoreProps.load(it) }
 
 android {
-    namespace "in.scriza.masalayatra"
+    namespace "in.scriza.chatpata"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "in.scriza.masalayatra"
+        applicationId "in.scriza.chatpata"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
